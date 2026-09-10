@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 
 /// Baris rapat pemilih konteks (PLAN §5): satu simbol peta, nama headline,

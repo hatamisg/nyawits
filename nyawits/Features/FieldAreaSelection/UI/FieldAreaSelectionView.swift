@@ -7,13 +7,18 @@ struct FieldAreaSelectionView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: FieldAreaSelectionViewModel
     @StateObject private var locationService = FieldLocationService()
+    @State private var panelHeight: CGFloat = 0
 
     private let title: String
     private let subtitle: String
     private let onCancel: (() -> Void)?
     private let onConfirmed: ((FieldBoundary) -> Void)?
 
-    private let panelMapInset: CGFloat = 252
+    private let minimumPanelMapInset: CGFloat = 224
+
+    private var panelMapInset: CGFloat {
+        max(minimumPanelMapInset, panelHeight + 16)
+    }
 
     /// Mode edit (`initialBoundary != nil`): peta memuat boundary tersimpan dan
     /// pembaruan GPS tidak menggeser kamera sehingga boundary lama tetap terlihat.
@@ -47,10 +52,7 @@ struct FieldAreaSelectionView: View {
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                topContent
-                Spacer(minLength: 16)
-            }
+            mapOverlay
 
             bottomPanel
         }
@@ -85,83 +87,65 @@ struct FieldAreaSelectionView: View {
         }
     }
 
-    private var topContent: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 12) {
+    private var mapOverlay: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Text(title)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .shadow(color: .black.opacity(0.75), radius: 5, y: 1)
+                    .padding(.horizontal, 64)
+                    .accessibilityHint(subtitle)
+
                 FloatingMapButton(action: close) {
                     Image(systemName: "chevron.left")
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityLabel("Back")
-
-                VStack(spacing: 2) {
-                    Text(title)
-                        .font(.title3.weight(.bold))
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.78)
-                }
-                .frame(maxWidth: .infinity)
-
-                FloatingMapButton {
-                    viewModel.isHelpPresented = true
-                } label: {
-                    Image(systemName: "questionmark")
-                }
-                .accessibilityLabel("Help")
             }
-            .padding(8)
-            .background(.regularMaterial, in: Capsule())
-            .shadow(color: .black.opacity(0.12), radius: 10, y: 4)
 
-            HStack(alignment: .top) {
-                MapStyleToggle(selection: $viewModel.mapStyle)
-                    .frame(width: 184)
+            Spacer(minLength: 16)
 
-                Spacer()
-
-                VStack(spacing: 10) {
-                    FloatingMapButton(action: locateUser) {
-                        Image(systemName: "location.north.fill")
-                    }
-                    .accessibilityLabel("Show my location")
-
-                    Menu {
-                        ForEach(FieldMapStyle.allCases) { style in
-                            Button {
-                                viewModel.mapStyle = style
-                            } label: {
-                                if viewModel.mapStyle == style {
-                                    Label(style.title, systemImage: "checkmark")
-                                } else {
-                                    Text(style.title)
-                                }
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "square.3.layers.3d")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(Color.primary)
-                            .frame(width: 52, height: 52)
-                            .background(.regularMaterial, in: Circle())
-                            .shadow(color: .black.opacity(0.12), radius: 8, y: 3)
-                    }
-                    .accessibilityLabel("Map layers")
-                }
-            }
+            FieldMapControlCluster(
+                selection: $viewModel.mapStyle,
+                onHelp: { viewModel.isHelpPresented = true },
+                onLocate: locateUser
+            )
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.bottom, panelMapInset + 16)
         }
         .padding(.horizontal, 16)
         .padding(.top, 8)
     }
 
     private var bottomPanel: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 16) {
             Capsule()
-                .fill(Color.secondary.opacity(0.45))
-                .frame(width: 38, height: 5)
+                .fill(.white.opacity(0.42))
+                .frame(width: 36, height: 5)
+                .accessibilityHidden(true)
 
-            metrics
+            HStack(spacing: 12) {
+                HStack(spacing: 10) {
+                    FieldActionButton(title: "Undo", icon: "arrow.uturn.backward", action: viewModel.undo)
+                        .disabled(viewModel.points.isEmpty)
+
+                    FieldActionButton(title: "Clear", icon: "trash", tint: .red, action: viewModel.requestClear)
+                        .disabled(viewModel.points.isEmpty)
+                }
+
+                Spacer(minLength: 0)
+
+                FieldMetricView(
+                    icon: "point.3.connected.trianglepath.dotted",
+                    iconColor: .green,
+                    value: "\(viewModel.points.count) points",
+                    label: "Field boundary"
+                )
+                .fixedSize(horizontal: true, vertical: false)
+            }
 
             if let warning = viewModel.validationMessage ?? viewModel.notice {
                 Label(warning, systemImage: "exclamationmark.triangle.fill")
@@ -170,63 +154,30 @@ struct FieldAreaSelectionView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            HStack(spacing: 10) {
-                FieldActionButton(title: "Undo", icon: "arrow.uturn.backward", action: viewModel.undo)
-                    .disabled(viewModel.points.isEmpty)
-
-                FieldActionButton(title: "Clear", icon: "trash", tint: .red, action: viewModel.requestClear)
-                    .disabled(viewModel.points.isEmpty)
-
-                FieldActionButton(title: "My Location", icon: "scope", action: locateUser)
-            }
-
             Button(action: confirmBoundary) {
                 Label("Confirm Field Area", systemImage: "checkmark")
-                    .font(.headline.weight(.bold))
+                    .font(.headline.weight(.semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(Color.green.opacity(viewModel.canConfirm ? 1 : 0.42), in: Capsule())
+                    .background(Color.green.opacity(viewModel.canConfirm ? 0.92 : 0.32), in: Capsule())
+                    .overlay(Capsule().strokeBorder(.white.opacity(viewModel.canConfirm ? 0.2 : 0.08), lineWidth: 0.5))
             }
             .buttonStyle(.plain)
             .disabled(!viewModel.canConfirm)
             .accessibilityHint(viewModel.canConfirm ? "Confirms this boundary" : "Add at least three non-crossing points")
         }
         .padding(.horizontal, 16)
-        .padding(.top, 10)
-        .padding(.bottom, 10)
-        .background(.ultraThickMaterial)
-        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
-        .shadow(color: .black.opacity(0.14), radius: 18, y: -4)
-        .ignoresSafeArea(edges: .bottom)
-    }
-
-    private var metrics: some View {
-        HStack(spacing: 10) {
-            FieldMetricView(
-                icon: "point.3.connected.trianglepath.dotted",
-                iconColor: .green,
-                value: "\(viewModel.points.count) points",
-                label: "Field boundary"
-            )
-
-            Divider().frame(height: 50)
-
-            FieldMetricView(
-                icon: "square.dashed",
-                iconColor: .secondary,
-                value: FieldMeasurementFormatter.area(viewModel.areaSquareMeters),
-                label: "Estimated area"
-            )
-
-            Divider().frame(height: 50)
-
-            FieldMetricView(
-                icon: "ruler",
-                iconColor: .secondary,
-                value: FieldMeasurementFormatter.distance(viewModel.perimeterMeters),
-                label: "Total perimeter"
-            )
+        .padding(.top, 9)
+        .padding(.bottom, 16)
+        .modifier(FieldSelectionPanelSurface())
+        .padding(.horizontal, 12)
+        .padding(.bottom, 8)
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.size.height
+        } action: { newHeight in
+            guard abs(panelHeight - newHeight) > 1 else { return }
+            panelHeight = newHeight
         }
     }
 
