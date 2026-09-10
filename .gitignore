@@ -60,3 +60,12 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# macOS
+.DS_Store
+
+# Local development, agents, docs, and tests
+.agents/
+docs/
+Tests/
+Averia_Serif_Libre/

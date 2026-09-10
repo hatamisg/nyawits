@@ -1,0 +1,139 @@
+import SwiftUI
+
+struct FieldMappingCard: View {
+    let field: MappedField
+    let onContinue: () -> Void
+    @State private var selected: PlantObservation?
+    @State private var showsPlants = false
+
+    private var summary: FieldProgressSummary {
+        FieldListPresentation.progressSummary(for: field)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            FieldOverviewMap(field: field, onSelect: { selected = $0 })
+                .frame(height: 380)
+
+            VStack(alignment: .leading, spacing: 16) {
+                header
+                metrics
+                if field.isDemo == true {
+                    Text("Data NDRE acak untuk pratinjau. Bukan hasil pengukuran klorofil.")
+                        .font(.caption).foregroundStyle(.secondary)
+                } else {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ProgressView(value: summary.fraction).tint(.green)
+                        Text("\(summary.numerator)/\(summary.denominator) sisi baris ditandai selesai")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+
+                if field.isDemo != true && (field.lowConfidenceCount > 0 || field.unpositionedPhotoCount > 0) {
+                    locationNotice
+                }
+
+                Button { if field.isDemo == true { showsPlants = true } else { onContinue() } } label: {
+                    Label(field.isDemo == true ? "Jelajahi 200 Tanaman" : buttonTitle,
+                          systemImage: field.isDemo == true ? "leaf.fill" : "camera.fill")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(Color.green, in: Capsule())
+                }
+                if field.isDemo != true && !field.observations.isEmpty {
+                    Button("Lihat foto & detail tanaman") { showsPlants = true }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                }
+            }
+            .padding(18)
+            .background(.background)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .stroke(Color.primary.opacity(0.07), lineWidth: 1)
+                .allowsHitTesting(false)
+        }
+        .shadow(color: .black.opacity(0.06), radius: 14, y: 5)
+        .sheet(item: $selected) { PlantObservationDetailView(observation: $0, field: field) }
+        .sheet(isPresented: $showsPlants) { FieldPlantListView(field: field) }
+    }
+
+    private var header: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(field.name)
+                    .font(.title3.weight(.bold))
+                Text(statusText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Text(field.isDemo == true ? "SIMULASI" : (field.capturedPlantCount == 0 ? "BARU" : "TERSIMPAN"))
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(.green)
+                .padding(.horizontal, 10)
+                .frame(height: 28)
+                .background(Color.green.opacity(0.12), in: Capsule())
+        }
+    }
+
+    private var metrics: some View {
+        HStack(spacing: 0) {
+            metric(value: FieldMeasurementFormatter.area(field.areaSquareMeters), label: "Luas")
+            Divider().frame(height: 38)
+            metric(value: "\(field.rows.count)", label: "Baris")
+            Divider().frame(height: 38)
+            if field.isDemo == true {
+                metric(value: String(format: "%.2f", field.ndreValues.reduce(0, +) / Double(max(1, field.ndreValues.count))), label: "Rata-rata NDRE")
+            } else {
+                metric(value: "\(field.capturedPlantCount)", label: "Foto")
+            }
+        }
+    }
+
+    private var locationNotice: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "location.fill")
+                .foregroundStyle(.orange)
+            Text(locationNoticeText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.09), in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func metric(value: String, label: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(value)
+                .font(.headline.monospacedDigit())
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 12)
+    }
+
+    private var statusText: String {
+        guard field.capturedPlantCount > 0 else { return "Siap untuk pemetaan foto" }
+        return "\(field.capturedPlantCount) tanaman pada \(field.mappedRowCount) baris"
+    }
+
+    private var buttonTitle: String {
+        field.observations.isEmpty ? "Mulai Foto Tanaman" : "Lanjutkan Pemetaan"
+    }
+
+    private var locationNoticeText: String {
+        if field.unpositionedPhotoCount > 0 {
+            return "\(field.unpositionedPhotoCount) foto belum memiliki posisi. Foto tetap tersimpan."
+        }
+        return "\(field.lowConfidenceCount) posisi masih berupa perkiraan GPS."
+    }
+}

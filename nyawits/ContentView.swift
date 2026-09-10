@@ -8,17 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var store: FieldMappingStore
+
+    init() {
+        #if DEBUG
+        let previewRoot = ProcessInfo.processInfo.arguments.contains("--mapping-camera-preview")
+            ? FileManager.default.temporaryDirectory.appendingPathComponent("MappingCameraPreview") : nil
+        _store = StateObject(wrappedValue: FieldMappingStore(storageRoot: previewRoot))
+        #else
+        _store = StateObject(wrappedValue: FieldMappingStore())
+        #endif
+    }
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--mapping-camera-preview") {
+                let demo = NDREDemoFactory.makeField()
+                PlantCaptureView(fieldID: demo.id, fieldName: "Uji kamera", plan: demo.plan,
+                                 existingField: store.field(id: demo.id))
+            } else {
+                FieldHomeView()
+            }
+            #else
+            FieldHomeView()
+            #endif
         }
-        .padding()
+        .environmentObject(store)
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
