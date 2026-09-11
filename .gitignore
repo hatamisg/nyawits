@@ -63,9 +63,14 @@ fastlane/test_output
 
 # macOS
 .DS_Store
+build/
 
 # Local development, agents, docs, and tests
 .agents/
-docs/
-Tests/
+docs/*
+!docs/ARCHITECTURE.md
+!docs/architecture.svg
+!docs/architecture.png
+Tests/*
+!Tests/ArchitectureSmokeTests.swift
 Averia_Serif_Libre/
