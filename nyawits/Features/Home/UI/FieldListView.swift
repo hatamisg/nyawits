@@ -27,7 +27,7 @@ struct FieldListView: View {
     /// Pilih kebun sebagai konteks aktif; root yang menutup daftar.
     let onSelectField: (UUID) -> Void
     var onSelectDemo: () -> Void = {}
-    @State private var demo = NDREDemoFactory.makeField()
+    @State private var demo = VigorDemoFactory.makeField()
     /// Aksi awal untuk debug hook UI test (buka sheet/dialog langsung).
     var initialAction: FieldListAction?
 

@@ -95,6 +95,17 @@ struct PlantObservation: Codable, Equatable, Identifiable {
     var imageHeight: Int? = nil
     var imageRotationDegrees: Int? = nil
     var sideReferenceVersion: Int? = nil
+    // KOLOM LAMA. Jangan dihapus dan jangan ditulis oleh kode baru.
+    //
+    // Dulu app menampilkan angka ini sebagai "NDRE", padahal tidak ada yang
+    // pernah mengukurnya: satu-satunya penulisnya VigorDemoFactory, yang
+    // menandai dirinya "simulated". Keduanya tetap DIBACA supaya JSON yang
+    // sudah ada di perangkat tetap terbuka -- menghapus field akan membuat
+    // decode gagal, dan FieldMappingStore menyetel dataLoadFailed yang
+    // memblokir SELURUH mutasi.
+    //
+    // Pengukuran sungguhan tidak tinggal di sini: skor vigor adalah properti
+    // SESI, bukan properti satu foto, jadi ia hidup di ScanSession.
     var ndre: Double? = nil
     var ndreSource: String? = nil
 }
@@ -261,7 +272,9 @@ struct MappedField: Codable, Equatable, Identifiable {
         "\(rowID.uuidString):\(side.rawValue)"
     }
 
-    var ndreValues: [Double] {
+    /// Nilai pratinjau dari kolom lama `ndre`. Hanya kebun demo yang punya isi;
+    /// kebun nyata selalu kosong, karena capture tidak pernah menulis kolom itu.
+    var previewVigorValues: [Double] {
         observations.compactMap(\.ndre).filter { $0.isFinite && (0...1).contains($0) }
     }
 }

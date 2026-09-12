@@ -201,7 +201,7 @@ struct MeasurementRowView: View {
         HStack(spacing: 12) {
             if let position = row.palettePosition {
                 Circle()
-                    .fill(NDREPalette.color(position))
+                    .fill(VigorPalette.color(position))
                     .frame(width: 16, height: 16)
             } else {
                 Circle()

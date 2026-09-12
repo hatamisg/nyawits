@@ -1,15 +1,15 @@
 # Paket Heatmap + Kamera
 
 Folder ini adalah area kerja pemetaan tanaman: mengambil foto, menampilkan titik
-tanaman/NDRE, dan membuka detail hasil pengambilan.
+tanaman berwarna, dan membuka detail hasil pengambilan.
 
 ## Pilih file sesuai perubahan
 
 | Mau mengubah | Buka |
 | --- | --- |
-| Kartu heatmap, angka luas/baris/NDRE, tombol mulai foto | Heatmap/UI/FieldMappingCard.swift |
+| Kartu heatmap, angka luas/baris/skor, tombol mulai foto | Heatmap/UI/FieldMappingCard.swift |
 | Gambar batas, baris, titik tanaman, tap titik | Heatmap/UI/Components/FieldOverviewMap.swift |
-| Warna NDRE dan legenda | Heatmap/UI/Components/NDREPalette.swift |
+| Warna skor vigor dan legenda | Heatmap/UI/Components/VigorPalette.swift |
 | Proyeksi koordinat menjadi posisi gambar | Heatmap/Presentation/FieldOverviewGeometry.swift |
 | Susunan layar kamera, navigasi, lifecycle | Capture/UI/PlantCaptureView.swift |
 | Tombol foto, lewati, undo, pemilihan sisi | Capture/UI/Components/CaptureControls.swift |
@@ -18,7 +18,7 @@ tanaman/NDRE, dan membuka detail hasil pengambilan.
 | Proses capture, sesi AR, progres, penentuan posisi | Capture/Presentation/PlantCaptureViewModel.swift |
 | Tampilan sesi ARKit dalam SwiftUI | Capture/Camera/ARCameraPreview.swift |
 | Daftar hasil tanaman | Plants/UI/FieldPlantListView.swift |
-| Foto, NDRE dan metadata satu tanaman | Plants/UI/PlantObservationDetailView.swift |
+| Foto, skor lama dan metadata satu tanaman | Plants/UI/PlantObservationDetailView.swift |
 
 ## Alur
 
@@ -28,7 +28,7 @@ menyimpan progres melalui FieldMappingStore → store menerbitkan data baru →
 FieldMappingCard menggambar ulang heatmap.
 
 Mengetuk titik membuka PlantObservationDetailView. Tombol jelajahi/detail membuka
-FieldPlantListView. Demo menampilkan data simulasi, bukan pengukuran NDRE nyata.
+FieldPlantListView. Demo menampilkan data simulasi, bukan hasil pengukuran.
 Riwayat pemetaan di Home juga menggunakan renderer heatmap yang sama.
 
 ## File bersama yang berhubungan
@@ -38,7 +38,7 @@ Riwayat pemetaan di Home juga menggunakan renderer heatmap yang sama.
 - Application/FieldMappingStore.swift: simpan progres, seleksi, edit, riwayat.
 - Domain/Repositories/FieldRepository.swift: kontrak penyimpanan.
 - Data/Repositories/LocalFieldRepository.swift: JSON dan file foto.
-- Shared/PreviewData/NDREDemoFactory.swift: data heatmap simulasi.
+- Shared/PreviewData/VigorDemoFactory.swift: data heatmap simulasi.
 
 Path di daftar ini relatif terhadap folder nyawits, bukan PlantMapping.
 Diskusikan perubahan model tersimpan dengan tim agar JSON lama tetap terbaca.
@@ -51,8 +51,10 @@ di Features/Fertilization, Aksi di Features/FieldActions.
 Home hanya perlu berubah jika kamu mengganti kontrak FieldMappingCard atau
 PlantCaptureView. Nama tipe dan callback lama dipertahankan pada pemisahan ini.
 
-Untuk menambahkan pengukuran NDRE asli, buat kontrak pengukuran dan adapter sensor
-terlebih dahulu. Kamera RGB saat ini tidak otomatis menghasilkan nilai NDRE aktual.
+Pengukuran sungguhan TIDAK tinggal di folder ini. Ia ada di Features/ScanSession:
+tiga frame dari rig Raspberry Pi per petak, ROI manual, dan skor vigor yang baru
+muncul setelah sesi ditutup. Kamera perangkat Apple tidak bisa memberi band
+spektralnya -- IR-cut filter menempel permanen di tumpukan sensor.
 
 ## Checklist setelah perubahan
 

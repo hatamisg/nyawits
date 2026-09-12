@@ -19,7 +19,7 @@ struct FieldMappingCard: View {
                 header
                 metrics
                 if field.isDemo == true {
-                    Text("Data NDRE acak untuk pratinjau. Bukan hasil pengukuran klorofil.")
+                    Text("Skor acak untuk pratinjau tampilan. Bukan hasil pengukuran, dan bukan nilai klorofil.")
                         .font(.caption).foregroundStyle(.secondary)
                 } else {
                     VStack(alignment: .leading, spacing: 6) {
@@ -89,7 +89,7 @@ struct FieldMappingCard: View {
             metric(value: "\(field.rows.count)", label: "Baris")
             Divider().frame(height: 38)
             if field.isDemo == true {
-                metric(value: String(format: "%.2f", field.ndreValues.reduce(0, +) / Double(max(1, field.ndreValues.count))), label: "Rata-rata NDRE")
+                metric(value: String(format: "%.2f", field.previewVigorValues.reduce(0, +) / Double(max(1, field.previewVigorValues.count))), label: "Rata-rata simulasi")
             } else {
                 metric(value: "\(field.capturedPlantCount)", label: "Foto")
             }
