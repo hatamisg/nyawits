@@ -38,6 +38,7 @@ struct FieldHomeView: View {
     @State private var fieldToResume: MappedField?
     @State private var demo = NDREDemoFactory.makeField()
     @State private var isShowingFieldList = false
+    @State private var isShowingScanSessions = false
     @State private var isShowingHomeNotice = false
     @State private var homeNotice = ""
     @State private var pendingListAction: FieldListAction?
@@ -104,6 +105,13 @@ struct FieldHomeView: View {
                 Text(homeNotice)
             }
             .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(isPresented: $isShowingScanSessions) {
+                ScanSessionListView(
+                    fieldID: store.activeField?.id,
+                    fieldName: store.activeField?.name
+                )
+                .toolbar(.visible, for: .navigationBar)
+            }
             .navigationDestination(isPresented: $isShowingFieldList) {
                 FieldListView(
                     onAddField: prepareNewField,
@@ -152,7 +160,7 @@ struct FieldHomeView: View {
     }
 
     private var fieldSection: some View {
-        HomeFieldsSection(realFields: realFields, demo: demo, store: store, isShowingFieldList: $isShowingFieldList, handleSelectField: handleSelectField, handleSelectDemo: handleSelectDemo, prepareNewField: prepareNewField)
+        HomeFieldsSection(realFields: realFields, demo: demo, store: store, isShowingFieldList: $isShowingFieldList, isShowingScanSessions: $isShowingScanSessions, handleSelectField: handleSelectField, handleSelectDemo: handleSelectDemo, prepareNewField: prepareNewField)
     }
 
     private var emptyState: some View {

@@ -15,7 +15,9 @@ struct GeoCoordinate: Codable, Equatable {
     }
 }
 
-enum PlantCaptureSide: String, Codable, CaseIterable, Identifiable {
+// Tipe nilai murni: `nonisolated` supaya bisa dipakai lapisan presentasi dan
+// kalkulator yang sengaja tidak terikat MainActor.
+nonisolated enum PlantCaptureSide: String, Codable, CaseIterable, Identifiable {
     case left
     case right
 
