@@ -34,8 +34,8 @@ struct FieldMapView: UIViewRepresentable {
         mapView.setRegion(
             MKCoordinateRegion(
                 center: jakarta,
-                latitudinalMeters: 2_000,
-                longitudinalMeters: 2_000
+                latitudinalMeters: 250,
+                longitudinalMeters: 250
             ),
             animated: false
         )
@@ -51,7 +51,7 @@ struct FieldMapView: UIViewRepresentable {
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
         context.coordinator.parent = self
-        mapView.layoutMargins = UIEdgeInsets(top: 118, left: 12, bottom: bottomContentInset, right: 12)
+        mapView.layoutMargins = UIEdgeInsets(top: 118, left: 12, bottom: bottomContentInset - 50, right: 12)
 
         if mapView.mapType != mapStyle.mapType {
             mapView.mapType = mapStyle.mapType
@@ -64,8 +64,8 @@ struct FieldMapView: UIViewRepresentable {
             mapView.setRegion(
                 MKCoordinateRegion(
                     center: request.coordinate,
-                    latitudinalMeters: 850,
-                    longitudinalMeters: 850
+                    latitudinalMeters: 100,
+                    longitudinalMeters: 100
                 ),
                 animated: true
             )
@@ -104,11 +104,39 @@ struct FieldMapView: UIViewRepresentable {
         }
 
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            guard let mapView = gestureRecognizer.view as? MKMapView else { return false }
+
             var touchedView: UIView? = touch.view
             while let view = touchedView {
-                if view is MKAnnotationView { return false }
+                if view is MKAnnotationView || view is UIControl { return false }
                 touchedView = view.superview
             }
+
+            if let view = touch.view, !view.isDescendant(of: mapView) {
+                return false
+            }
+
+            let location = touch.location(in: mapView)
+            let bounds = mapView.bounds
+
+            // Abaikan tap di area top bar (back button & header)
+            if location.y <= 120 {
+                return false
+            }
+
+            // Abaikan tap di area bottom panel
+            if location.y >= bounds.height - parent.bottomContentInset {
+                return false
+            }
+
+            // Abaikan tap di area control cluster sisi kanan (button ?, layers, locate)
+            let clusterWidth: CGFloat = 88
+            let clusterBottom = bounds.height - (parent.bottomContentInset - 50)
+            let clusterTop = clusterBottom - 210
+            if location.x >= bounds.width - clusterWidth && location.y >= clusterTop && location.y <= clusterBottom {
+                return false
+            }
+
             return true
         }
 

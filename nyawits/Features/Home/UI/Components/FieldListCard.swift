@@ -17,10 +17,6 @@ struct FieldListCard: View {
         self.isActive = isActive
     }
 
-    private var summary: FieldProgressSummary {
-        FieldListPresentation.progressSummary(for: field)
-    }
-
     var body: some View {
         Group {
             if dynamicTypeSize.isAccessibilitySize {

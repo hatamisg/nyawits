@@ -63,9 +63,11 @@ fastlane/test_output
 
 # macOS
 .DS_Store
+build/
 
-# Local development, agents, docs, and tests
+# Local development, agents, docs, tests, and scripts
 .agents/
 docs/
 Tests/
+scripts/
 Averia_Serif_Libre/

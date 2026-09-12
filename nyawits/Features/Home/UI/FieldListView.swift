@@ -397,11 +397,11 @@ struct FieldListView: View {
 
             Button(action: onAddField) {
                 Label("Tambah Kebun", systemImage: "plus")
-                    .font(.headline)
+                    .font(.body)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 50)
-                    .background(Color.green, in: Capsule())
+                    .background(Color.blue, in: Capsule())
             }
             .padding(.top, 8)
         }

@@ -27,6 +27,9 @@ struct ContentView: View {
                 let demo = NDREDemoFactory.makeField()
                 PlantCaptureView(fieldID: demo.id, fieldName: "Uji kamera", plan: demo.plan,
                                  existingField: store.field(id: demo.id))
+            } else if ProcessInfo.processInfo.arguments.contains("--mulch-row-setup-preview") {
+                let demo = NDREDemoFactory.makeField()
+                MulchRowSetupView(boundary: demo.plan.boundary, initialRowCount: 10)
             } else {
                 FieldHomeView()
             }
