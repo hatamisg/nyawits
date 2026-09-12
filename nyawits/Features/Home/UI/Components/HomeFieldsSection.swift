@@ -7,6 +7,7 @@ struct HomeFieldsSection: View {
     @ObservedObject var store: FieldMappingStore
     @Binding var isShowingFieldList: Bool
     @Binding var isShowingScanSessions: Bool
+    @Binding var isShowingSchedule: Bool
     let handleSelectField: (UUID) -> Void
     let handleSelectDemo: () -> Void
     let prepareNewField: () -> Void
@@ -42,6 +43,9 @@ struct HomeFieldsSection: View {
             }
             HomeNavigationRow(title: "Sesi Pindai", symbol: "viewfinder") {
                 isShowingScanSessions = true
+            }
+            HomeNavigationRow(title: "Jadwal Pemupukan", symbol: "calendar.badge.clock") {
+                isShowingSchedule = true
             }
         }
         .padding(.top, 10)
