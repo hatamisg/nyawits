@@ -9,14 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var store: FieldMappingStore
+    @StateObject private var scanStore: ScanSessionStore
 
     init() {
         #if DEBUG
         let previewRoot = ProcessInfo.processInfo.arguments.contains("--mapping-camera-preview")
             ? FileManager.default.temporaryDirectory.appendingPathComponent("MappingCameraPreview") : nil
         _store = StateObject(wrappedValue: FieldMappingStore(storageRoot: previewRoot))
+        _scanStore = StateObject(wrappedValue: ScanSessionStore(storageRoot: previewRoot))
         #else
         _store = StateObject(wrappedValue: FieldMappingStore())
+        _scanStore = StateObject(wrappedValue: ScanSessionStore())
         #endif
     }
 
@@ -38,6 +41,7 @@ struct ContentView: View {
             #endif
         }
         .environmentObject(store)
+        .environmentObject(scanStore)
     }
 }
 
