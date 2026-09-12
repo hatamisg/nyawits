@@ -51,8 +51,8 @@ struct FieldOverviewMap: View {
             .allowsHitTesting(false)
         }
         .overlay(alignment: .bottom) {
-            if !field.ndreValues.isEmpty {
-                NDRELegend().foregroundStyle(.white.opacity(0.85)).padding(.horizontal, 18).padding(.bottom, 14).allowsHitTesting(false)
+            if !field.previewVigorValues.isEmpty {
+                VigorLegend(caption: "Skala simulasi").foregroundStyle(.white.opacity(0.85)).padding(.horizontal, 18).padding(.bottom, 14).allowsHitTesting(false)
             } else {
                 Text("Ketuk titik untuk melihat foto • posisi perkiraan")
                     .font(.caption2).foregroundStyle(.white).padding(.bottom, 14)
@@ -113,7 +113,7 @@ struct FieldOverviewMap: View {
                 || observation.trackingQuality != .normal
             context.fill(
                 Path(ellipseIn: rect),
-                with: .color(observation.ndre != nil ? NDREPalette.color(observation.ndre) : (isEstimated ? .gray : .cyan))
+                with: .color(observation.ndre != nil ? VigorPalette.color(observation.ndre) : (isEstimated ? .gray : .cyan))
             )
             context.stroke(Path(ellipseIn: rect), with: .color(.white.opacity(0.7)), lineWidth: 0.8)
         }

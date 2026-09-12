@@ -2,8 +2,15 @@ import CoreLocation
 import Foundation
 import MapKit
 
-/// Synthetic spatial sample, not an NDRE measurement or a chili diagnostic model.
-enum NDREDemoFactory {
+/// Contoh sebaran spasial sintetik untuk pratinjau tampilan.
+///
+/// BUKAN hasil pengukuran dan bukan model diagnosis cabai. Angkanya dibangkitkan
+/// generator acak berbenih tetap, lalu ditandai `ndreSource = "simulated"` dan
+/// `isDemo = true` supaya UI selalu bisa menyebutnya simulasi.
+///
+/// Ini satu-satunya penulis kolom lama `ndre` yang tersisa; pengukuran
+/// sungguhan hidup di `ScanSession`, bukan di `PlantObservation`.
+enum VigorDemoFactory {
     static func makeField() -> MappedField {
         let origin = MKMapPoint(CLLocationCoordinate2D(latitude: -6.901, longitude: 107.600))
         let metersPerPoint = MKMetersPerMapPointAtLatitude(-6.901)

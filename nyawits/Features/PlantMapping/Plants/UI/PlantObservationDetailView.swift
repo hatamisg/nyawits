@@ -16,7 +16,7 @@ struct PlantObservationDetailView: View {
                     } else {
                         VStack(spacing: 12) {
                             Image(systemName: field.isDemo == true ? "leaf.fill" : "photo")
-                                .font(.system(size: 52)).foregroundStyle(NDREPalette.color(observation.ndre))
+                                .font(.system(size: 52)).foregroundStyle(VigorPalette.color(observation.ndre))
                             Text(field.isDemo == true ? "Tanaman simulasi" : "Foto tidak tersedia")
                                 .font(.headline)
                             Text(field.isDemo == true ? "Contoh data untuk melihat pemetaan. Tidak ada foto atau pengukuran sensor nyata." : "Metadata posisi tetap dapat dilihat di bawah.")
@@ -33,13 +33,15 @@ struct PlantObservationDetailView: View {
                     if let ndre = observation.ndre {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text(observation.ndreSource == "simulated" ? "NDRE SIMULASI" : "NDRE").font(.caption.bold())
+                                // Kolom lama: satu-satunya pengisinya data simulasi.
+                                Text(observation.ndreSource == "simulated"
+                                     ? "SKOR SIMULASI" : "SKOR LAMA").font(.caption.bold())
                                 Text(ndre, format: .number.precision(.fractionLength(3))).font(.largeTitle.bold().monospacedDigit())
                             }
                             Spacer()
-                            Circle().fill(NDREPalette.color(ndre)).frame(width: 56, height: 56)
+                            Circle().fill(VigorPalette.color(ndre)).frame(width: 56, height: 56)
                         }
-                        NDRELegend()
+                        VigorLegend(caption: "Skala simulasi")
                     }
                     LabeledContent("Waktu", value: observation.capturedAt.formatted(date: .abbreviated, time: .shortened))
                     LabeledContent("Posisi", value: positionDescription)

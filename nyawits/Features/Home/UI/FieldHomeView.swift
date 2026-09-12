@@ -36,7 +36,7 @@ struct FieldHomeView: View {
     @State private var createFlow: CreateFieldFlow?
     @State private var pendingCreatedFieldID: UUID?
     @State private var fieldToResume: MappedField?
-    @State private var demo = NDREDemoFactory.makeField()
+    @State private var demo = VigorDemoFactory.makeField()
     @State private var isShowingFieldList = false
     @State private var isShowingHomeNotice = false
     @State private var homeNotice = ""

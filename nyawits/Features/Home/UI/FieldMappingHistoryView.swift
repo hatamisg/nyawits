@@ -121,7 +121,7 @@ struct FieldPlantListViewInline: View {
                             Button { selected = observation } label: {
                                 HStack {
                                     Circle()
-                                        .fill(NDREPalette.color(observation.ndre))
+                                        .fill(VigorPalette.color(observation.ndre))
                                         .frame(width: 14, height: 14)
                                         .accessibilityHidden(true)
                                     Text("\(observation.side.title) · Tanaman \(observation.plantSequence)")

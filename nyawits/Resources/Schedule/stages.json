@@ -1,0 +1,75 @@
+{
+  "_sumber": [
+    "Dinas Pertanian, Ketahanan Pangan dan Perikanan Kabupaten Buleleng —",
+    "'Pemupukan Tanaman Cabai dalam Polybag'.",
+    "https://distankan.bulelengkab.go.id/informasi/detail/artikel/42_pemupukan-tanaman-cabai-dalam-polybag",
+    "",
+    "Pembanding nasional (hamparan, bukan polybag): Balitsa/Kementan ~150-175 kg",
+    "N/ha, 150 kg P2O5/ha, 150 kg K2O/ha, atau ~1.000 kg/ha NPK majemuk.",
+    "Uji silang kasar: pada 16-20 ribu tanaman/ha itu ~50-62 g per tanaman",
+    "semusim; jadwal polybag di bawah memberi ~60-85 g. Orde cocok; polybag",
+    "sedikit lebih tinggi karena airnya cepat lolos sehingga dosis dipecah.",
+    "",
+    "PERINGATAN: sumber utama adalah dinas kabupaten, BUKAN publikasi",
+    "penelitian. Kalau penyuluh setempat punya anjuran untuk Batam, itu lebih",
+    "diutamakan karena menyesuaikan tanah dan iklimnya.",
+    "",
+    "Seluruh batas di bawah dalam HST (hari setelah TANAM/pindah tanam).",
+    "Konversi ke HSS (hari setelah semai) dihitung dari tanggal sebenarnya,",
+    "tidak diasumsikan -- lihat growth_stage.py."
+  ],
+  "fase": [
+    {
+      "nama": "persemaian",
+      "hst_mulai": -999, "hst_selesai": 0,
+      "pupuk": "belum ada pemupukan susulan",
+      "dosis": "-", "interval_hari": null
+    },
+    {
+      "nama": "vegetatif",
+      "hst_mulai": 0, "hst_selesai": 30,
+      "pupuk": "NPK 16-16-16 (seimbang)",
+      "dosis": "5 g/tanaman", "interval_hari": 8
+    },
+    {
+      "nama": "pembungaan",
+      "hst_mulai": 30, "hst_selesai": 45,
+      "pupuk": "NPK 12-12-17 atau 13-13-21 (P & K naik, N DITAHAN)",
+      "dosis": "5 g/tanaman", "interval_hari": 8
+    },
+    {
+      "nama": "pembuahan",
+      "hst_mulai": 45, "hst_selesai": 999,
+      "pupuk": "NPK tinggi kalium + kalsium 1-2 g tiap 2 minggu",
+      "dosis": "5 g/tanaman", "interval_hari": 7
+    }
+  ],
+  "scan": [
+    {
+      "nama": "Scan 1 — menjelang bunga pertama",
+      "hst_mulai": 25, "hst_selesai": 32,
+      "kenapa": "kesempatan TERAKHIR memperbaiki ukuran kanopi sebelum potensi hasil terkunci, dan bertepatan dengan keputusan menurunkan N",
+      "prioritas": "utama"
+    },
+    {
+      "nama": "Scan 2 — awal pembuahan",
+      "hst_mulai": 45, "hst_selesai": 55,
+      "kenapa": "menangkap tanaman yang gagal menopang beban buah; masih sempat dikoreksi dengan kalium",
+      "prioritas": "kedua"
+    }
+  ],
+  "_catatan_scan": [
+    "Dua scan, bukan lima sampai tujuh. Alasannya dua:",
+    "(1) potensi hasil cabai terkunci di sekitar pembungaan 30-45 HST, jadi",
+    "    informasi sesudahnya datang terlambat untuk mengubah jumlah buah;",
+    "(2) keduanya jatuh pada hari petani SUDAH keluar untuk memupuk, jadi nol",
+    "    perjalanan tambahan.",
+    "",
+    "BELUM DIUJI: apakah alat bekerja sama baiknya di kedua momen. Dataset",
+    "simulasi membandingkan petak pada SATU saat, bukan satu tanaman di",
+    "berbagai umur (rentang LAI rerata cuma 1,30-1,87). Dugaan berdasar dari",
+    "analisis galat Blok 53: kegagalan terkonsentrasi di kebun yang tanahnya",
+    "lebih terlihat, jadi scan terlalu dini -- kanopi masih jarang -- kemungkinan",
+    "lebih buruk. Yang mengujinya foto lapangan, bukan simulasi."
+  ]
+}

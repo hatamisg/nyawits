@@ -3,8 +3,10 @@ import SwiftUI
 struct FieldMappingCard: View {
     let field: MappedField
     let onContinue: () -> Void
+    @EnvironmentObject private var scanStore: ScanSessionStore
     @State private var selected: PlantObservation?
     @State private var showsPlants = false
+    @State private var showsScanSessions = false
 
     private var summary: FieldProgressSummary {
         FieldListPresentation.progressSummary(for: field)
@@ -19,7 +21,7 @@ struct FieldMappingCard: View {
                 header
                 metrics
                 if field.isDemo == true {
-                    Text("Data NDRE acak untuk pratinjau. Bukan hasil pengukuran klorofil.")
+                    Text("Skor acak untuk pratinjau tampilan. Bukan hasil pengukuran, dan bukan nilai klorofil.")
                         .font(.caption).foregroundStyle(.secondary)
                 } else {
                     VStack(alignment: .leading, spacing: 6) {
@@ -42,9 +44,18 @@ struct FieldMappingCard: View {
                         .frame(height: 54)
                         .background(Color.green, in: Capsule())
                 }
-                if field.isDemo != true && !field.observations.isEmpty {
-                    Button("Lihat foto & detail tanaman") { showsPlants = true }
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                // Satu tombol, dua tujuan: sesi pindai menumpang di sini supaya
+                // kartu tidak bertambah elemen. Muncul untuk semua kebun nyata,
+                // karena satu petak sesi bisa berdiri sendiri tanpa foto.
+                if field.isDemo != true {
+                    Menu {
+                        Button("Foto & detail tanaman") { showsPlants = true }
+                            .disabled(field.observations.isEmpty)
+                        Button("Sesi pindai") { showsScanSessions = true }
+                    } label: {
+                        Text("Lihat detail kebun")
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
                 }
             }
             .padding(18)
@@ -59,6 +70,12 @@ struct FieldMappingCard: View {
         .shadow(color: .black.opacity(0.06), radius: 14, y: 5)
         .sheet(item: $selected) { PlantObservationDetailView(observation: $0, field: field) }
         .sheet(isPresented: $showsPlants) { FieldPlantListView(field: field) }
+        .sheet(isPresented: $showsScanSessions) {
+            NavigationStack {
+                ScanSessionListView(fieldID: field.id, fieldName: field.name, showsCloseButton: true)
+            }
+            .environmentObject(scanStore)
+        }
     }
 
     private var header: some View {
@@ -89,7 +106,7 @@ struct FieldMappingCard: View {
             metric(value: "\(field.rows.count)", label: "Baris")
             Divider().frame(height: 38)
             if field.isDemo == true {
-                metric(value: String(format: "%.2f", field.ndreValues.reduce(0, +) / Double(max(1, field.ndreValues.count))), label: "Rata-rata NDRE")
+                metric(value: String(format: "%.2f", field.previewVigorValues.reduce(0, +) / Double(max(1, field.previewVigorValues.count))), label: "Rata-rata simulasi")
             } else {
                 metric(value: "\(field.capturedPlantCount)", label: "Foto")
             }

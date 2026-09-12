@@ -1,6 +1,12 @@
 import SwiftUI
 
-enum NDREPalette {
+/// Tangga warna posisi vigor RELATIF.
+///
+/// Bentuk tangganya dipertahankan dari versi sebelumnya; yang berubah artinya.
+/// Masukannya bukan nilai terukur melainkan POSISI 0…1 di dalam satu sesi dan
+/// satu kebun: 0 paling tertinggal, 1 terdepan. Ia tidak pernah menyatakan
+/// kadar klorofil, dan tidak sah dibandingkan antar sesi atau antar kebun.
+enum VigorPalette {
     // Fixed nonlinear ramp: improves midrange contrast without normalizing each field.
     static let stops: [(Double, (Double, Double, Double))] = [
         (0, (1, 0.94, 0.12)), (0.2, (0.98, 0.88, 0.12)),
@@ -18,22 +24,25 @@ enum NDREPalette {
     }
 }
 
-struct NDRELegend: View {
+struct VigorLegend: View {
+    /// Teks tengah legenda. Selalu sebutkan bahwa skalanya relatif.
+    var caption: String = "Posisi relatif"
+
     var body: some View {
         VStack(spacing: 5) {
-            LinearGradient(stops: NDREPalette.stops.map { .init(color: NDREPalette.color($0.0), location: $0.0) },
+            LinearGradient(stops: VigorPalette.stops.map { .init(color: VigorPalette.color($0.0), location: $0.0) },
                            startPoint: .leading, endPoint: .trailing)
                 .frame(height: 9).clipShape(Capsule())
             HStack {
-                Text("0 · rendah")
+                Text("tertinggal")
                 Spacer()
-                Text("NDRE")
+                Text(caption)
                 Spacer()
-                Text("1 · tinggi")
+                Text("terdepan")
             }
-            .font(.caption2.monospacedDigit())
+            .font(.caption2)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("NDRE: nol kuning, satu hijau. Abu-abu belum ada data.")
+        .accessibilityLabel("\(caption): kuning paling tertinggal, hijau terdepan. Abu-abu belum ada data.")
     }
 }
