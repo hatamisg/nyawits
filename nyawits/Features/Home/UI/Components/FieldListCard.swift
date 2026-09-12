@@ -182,15 +182,6 @@ struct FieldListCard_Previews: PreviewProvider {
             .previewDisplayName("Standar (Light)")
 
             VStack(spacing: 12) {
-                FieldListCard(field: inProgressField, isActive: true)
-                FieldListCard(field: completedField)
-            }
-            .padding()
-            .background(Color(uiColor: .systemGroupedBackground))
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
-
-            VStack(spacing: 12) {
                 FieldListCard(field: longNameField, isActive: true)
                 FieldListCard(field: notMappedField)
             }
