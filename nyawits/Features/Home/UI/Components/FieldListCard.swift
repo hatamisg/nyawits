@@ -115,7 +115,7 @@ struct FieldListCard: View {
 
 struct FieldListCard_Previews: PreviewProvider {
     static var inProgressField: MappedField {
-        var field = NDREDemoFactory.makeField()
+        var field = VigorDemoFactory.makeField()
         field.name = "Kebun Cabai Utara"
         field.isDemo = false
         // 8 dari 20 sisi selesai
@@ -130,7 +130,7 @@ struct FieldListCard_Previews: PreviewProvider {
     }
 
     static var completedField: MappedField {
-        var field = NDREDemoFactory.makeField()
+        var field = VigorDemoFactory.makeField()
         field.name = "Kebun Blok Barat"
         field.isDemo = false
         field.completedRowSides = field.rows.flatMap { row in
@@ -140,7 +140,7 @@ struct FieldListCard_Previews: PreviewProvider {
     }
 
     static var notMappedField: MappedField {
-        let base = NDREDemoFactory.makeField()
+        let base = VigorDemoFactory.makeField()
         var field = MappedField(name: "Kebun Baru Buka", plan: base.plan, observations: [])
         field.isDemo = false
         field.completedRowSides = []

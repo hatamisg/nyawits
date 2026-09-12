@@ -225,6 +225,6 @@ struct PlantCaptureView: View {
 
 #if DEBUG
 #Preview {
-    NavigationStack { PlantCaptureView(fieldID: PreviewFixtures.field.id, fieldName: PreviewFixtures.field.name, plan: PreviewFixtures.field.plan) }.environmentObject(PreviewFixtures.store())
+    NavigationStack { PlantCaptureView(fieldID: PreviewFixtures.field.id, fieldName: PreviewFixtures.field.name, plan: PreviewFixtures.field.plan) }.previewStores()
 }
 #endif

@@ -1,0 +1,35 @@
+{
+  "kelas": "ridge",
+  "himpunan_fitur": "5 fitur · gabungan",
+  "fitur": [
+    "SI_rel",
+    "b_hi_rel",
+    "b_R_rel",
+    "b_G_rel",
+    "b_B_rel"
+  ],
+  "goyangan_saat_dilatih": 0.01,
+  "sefase_rgb_diasumsikan": 1.0,
+  "konfigurasi": "satu kamera NoIR tukar filter + satu kamera RGB, kartu abu-abu di SETIAP frame, tanpa masking, tanpa lab",
+  "keluaran": "skor peringkat DALAM kebun; nilai rendah = paling tertinggal",
+  "target_latih": "vigor (laten simulasi)",
+  "validasi_lapangan": null,
+  "menggantikan_vigor_rank_json": false,
+  "peringatan": [
+    "Angka evaluasi berasal dari simulasi. BUKAN kinerja lapangan.",
+    "Keluaran adalah PERINGKAT, bukan nilai klorofil mutlak.",
+    "Tidak menunjukkan PENYEBAB: petak kering/ternaungi ikut terbaca tertinggal. Uji pengecoh lengan gabungan 10,2 ug/cm2 -- LEBIH BURUK daripada filter saja (9,5) dan RGB saja (9,3).",
+    "Kanal RGB memakai kurva TEMPLATE yang disapu, bukan kurva sensor sungguhan.",
+    "Rantai pemrosesan kamera RGB (white balance, kurva nada, JPEG) TIDAK dimodelkan. Lengan ini mengandaikan RAW dengan WB terkunci.",
+    "Fraksi goyangan sefase antar kanal RGB BELUM diukur.",
+    "Konfigurasi gabungan DIPILIH pemilik 2026-09-11; berkas INI yang dibaca aplikasi. model/vigor_rank.json (dua fitur) dipertahankan untuk riwayat dan TIDAK boleh dipakai aplikasi."
+  ],
+  "koefisien": {
+    "SI_rel": 0.27772655580537153,
+    "b_hi_rel": 2.156355269512668,
+    "b_R_rel": -1.5396966779445047,
+    "b_G_rel": -3.950229304875289,
+    "b_B_rel": 3.147006983250697
+  },
+  "intercept": -0.5209627557501392
+}

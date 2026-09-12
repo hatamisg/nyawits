@@ -1,0 +1,32 @@
+{
+  "_catatan": [
+    "NILAI AWAL, WAJIB DIKALIBRASI. Angka di bawah berasal dari pedoman",
+    "agronomi umum untuk pupuk N, BUKAN dari pengukuran pada polybag di Batam.",
+    "Polybag mengering dan meloloskan air lebih cepat daripada tanah hamparan,",
+    "jadi ambang pencuciannya sengaja dibuat lebih ketat daripada angka lapangan",
+    "yang biasa dikutip (~25 mm).",
+    "",
+    "Kalibrasi adalah pekerjaan Tahap 2: setelah 1-2 musim catatan sendiri",
+    "(schedule/catatan_pemupukan.csv), setel ulang dua angka pertama. Menyetel",
+    "dua angka dari data lokal kemungkinan besar lebih berharga daripada",
+    "mengganti seluruh pendekatan dengan model.",
+    "",
+    "lengas_kering DIHAPUS: ambang mutlak untuk lengas tidak bisa",
+    "dipertahankan (nilai model di Batam datar 0,08-0,09 bahkan di hari",
+    "berhujan). Lengas kini dipakai relatif dan hanya mengubah TINDAKAN."
+  ],
+  "hujan_cuci_mm": 20.0,
+  "hujan_ideal_min_mm": 2.0,
+  "hujan_ideal_maks_mm": 10.0,
+  "jendela_cuci_jam": 24,
+  "jendela_larut_jam": 8,
+  "jam_aplikasi": 16,
+  "_arti": {
+    "hujan_cuci_mm": "hujan kumulatif dalam jendela_cuci_jam yang dianggap mencuci hara -> MERAH",
+    "hujan_ideal_min_mm": "hujan ringan minimum dalam jendela_larut_jam yang membantu melarutkan pupuk",
+    "hujan_ideal_maks_mm": "di atas ini hujan berhenti membantu dan mulai membilas",
+    "jendela_cuci_jam": "berapa jam setelah aplikasi yang dihitung untuk risiko pencucian",
+    "jendela_larut_jam": "berapa jam setelah aplikasi yang dihitung untuk pelarutan",
+    "jam_aplikasi": "jam pemupukan yang diasumsikan; sore mengurangi penguapan urea"
+  }
+}

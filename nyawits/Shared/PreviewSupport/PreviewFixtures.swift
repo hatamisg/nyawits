@@ -1,10 +1,11 @@
 #if DEBUG
 import Foundation
+import SwiftUI
 
 /// Canvas-only fixtures. No files, permissions, or live measurements are needed.
 @MainActor
 enum PreviewFixtures {
-    static let demo = NDREDemoFactory.makeField()
+    static let demo = VigorDemoFactory.makeField()
     static var field: MappedField {
         var value = demo
         value.name = "Kebun Utama"
@@ -24,6 +25,15 @@ enum PreviewFixtures {
     static func store(empty: Bool = false) -> FieldMappingStore {
         FieldMappingStore(repository: PreviewFieldRepository(fields: empty ? [] : [field]))
     }
+    static func scanStore() -> ScanSessionStore {
+        ScanSessionStore(repository: PreviewScanSessionRepository())
+    }
+    /// `ScheduleSettingsStore` hanya punya seam berkas, jadi preview diarahkan
+    /// ke folder sementara yang unik agar tidak menyentuh data perangkat.
+    static func scheduleStore() -> ScheduleSettingsStore {
+        ScheduleSettingsStore(storageRoot: FileManager.default.temporaryDirectory
+            .appendingPathComponent("nyawits-preview-schedule-\(UUID().uuidString)", isDirectory: true))
+    }
     static func areaModel() -> FieldAreaSelectionViewModel {
         FieldAreaSelectionViewModel(initialBoundary: boundary)
     }
@@ -33,6 +43,30 @@ enum PreviewFixtures {
     static func captureModel() -> PlantCaptureViewModel {
         PlantCaptureViewModel(fieldID: field.id, fieldName: field.name, plan: field.plan)
     }
+}
+
+extension View {
+    /// Menyuntikkan seluruh store yang dibutuhkan pohon tampilan utama.
+    /// Dipakai preview agar penambahan store baru cukup diubah di satu tempat.
+    @MainActor
+    func previewStores(_ store: FieldMappingStore? = nil) -> some View {
+        environmentObject(store ?? PreviewFixtures.store())
+            .environmentObject(PreviewFixtures.scanStore())
+            .environmentObject(PreviewFixtures.scheduleStore())
+    }
+}
+
+@MainActor
+private final class PreviewScanSessionRepository: ScanSessionRepository {
+    private var sessions: [ScanSession] = []
+    func prepare() throws {}
+    func loadSessions() throws -> [ScanSession] { sessions }
+    func saveSessions(_ sessions: [ScanSession]) throws { self.sessions = sessions }
+    func saveFrame(_ data: Data, frameID: UUID, pathExtension: String) throws -> String {
+        "\(frameID.uuidString).\(pathExtension)"
+    }
+    func deleteFrame(named filename: String) -> Bool { true }
+    func frameURL(filename: String) -> URL? { nil }
 }
 
 @MainActor

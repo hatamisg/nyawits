@@ -250,6 +250,6 @@ struct FieldEditView: View {
 
 #if DEBUG
 #Preview {
-    NavigationStack { FieldEditView(field: PreviewFixtures.field, onSaved: { _, _ in }) }.environmentObject(PreviewFixtures.store())
+    NavigationStack { FieldEditView(field: PreviewFixtures.field, onSaved: { _, _ in }) }.previewStores()
 }
 #endif

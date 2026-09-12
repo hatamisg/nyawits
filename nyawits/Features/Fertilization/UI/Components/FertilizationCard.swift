@@ -2,14 +2,11 @@ import SwiftUI
 
 struct FertilizationCard: View {
     let content: FertilizationContent
-    private var isDemo: Bool { content.isSimulation }
-    @State private var showsSchedule = false
     @ScaledMetric(relativeTo: .title2) private var dateDiameter: CGFloat = 60
 
     var body: some View {
         VStack(spacing: 12) {
-            Button { showsSchedule = true } label: {
-                VStack(alignment: .leading, spacing: 22) {
+            VStack(alignment: .leading, spacing: 22) {
                     HStack {
                         Label("Pemupukan", systemImage: "calendar.badge.clock")
                             .foregroundStyle(.orange)
@@ -20,7 +17,7 @@ struct FertilizationCard: View {
                     }
                     .font(.headline)
 
-                    if isDemo {
+                    if content.hasSchedule {
                         ViewThatFits(in: .horizontal) {
                             scheduleDates
                             ScrollView(.horizontal) {
@@ -28,32 +25,25 @@ struct FertilizationCard: View {
                             }
                             .scrollIndicators(.hidden)
                         }
-                        Text("Contoh jadwal · Simulasi")
+                        Text(content.caption)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     } else {
-                        Text("Belum ada jadwal pemupukan")
+                        Text(content.headline)
                             .font(.body)
                             .foregroundStyle(.primary)
-                        Text("Jadwal untuk kebun ini belum tersedia.")
+                        Text(content.detail)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
                 }
-                .padding(20)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(uiColor: .secondarySystemGroupedBackground),
-                            in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-                .contentShape(RoundedRectangle(cornerRadius: 28))
-            }
-            .buttonStyle(.plain)
-            .accessibilityHint("Lihat keterangan jadwal pemupukan")
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(uiColor: .secondarySystemGroupedBackground),
+                        in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 28))
         }
-        .alert("Jadwal pemupukan", isPresented: $showsSchedule) {
-            Button("Tutup", role: .cancel) {}
-        } message: {
-            Text(content.detail)
-        }
+        .accessibilityHint("Buka jadwal pemupukan")
     }
 
     private var scheduleDates: some View {
@@ -76,7 +66,11 @@ struct FertilizationCard: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .accessibilityElement(children: .ignore)
-                                .accessibilityLabel("\(day) \(date.month), contoh jadwal")
+                                .accessibilityLabel(
+                                    content.isSimulation
+                                        ? "\(day) \(date.month), contoh jadwal"
+                                        : "\(day) \(date.month), hari aman memupuk"
+                                )
                             }
                         }
     }

@@ -26,7 +26,7 @@ struct FieldHeatmapRow: View {
                 let isEstimated = (observation.horizontalAccuracyMeters ?? .infinity) > 10
                     || observation.trackingQuality != .normal
                 let color = observation.ndre != nil
-                    ? PlantHealthPalette.color(observation.ndre) : (isEstimated ? Color.gray : Color.cyan)
+                    ? VigorPalette.color(observation.ndre) : (isEstimated ? Color.gray : Color.cyan)
                 context.fill(Path(ellipseIn: rect), with: .color(color))
                 context.stroke(Path(ellipseIn: rect), with: .color(.white.opacity(0.7)), lineWidth: 0.8)
             }

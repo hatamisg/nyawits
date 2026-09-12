@@ -14,4 +14,4 @@ Preview kamera hanya menampilkan UI; pengambilan foto, GPS, dan motion tidak dij
 
 Komponen kecil dalam satu file (misalnya tombol dan material glass) ditampilkan bersama di preview file tersebut. Kontrol baris memakai state lokal agar nilai bisa diubah lewat preview interaktif.
 
-Saat menambah komponen baru, tambahkan `#Preview` di file yang sama dan gunakan fixture lokal. Sertakan `NavigationStack` dan `.environmentObject(PreviewFixtures.store())` jika tampilan membutuhkannya.
+Saat menambah komponen baru, tambahkan `#Preview` di file yang sama dan gunakan fixture lokal. Sertakan `NavigationStack` dan `.previewStores()` jika tampilan membutuhkannya. `previewStores()` menyuntikkan `FieldMappingStore`, `ScanSessionStore`, dan `ScheduleSettingsStore` sekaligus, jadi penambahan store baru cukup diubah di `PreviewFixtures.swift`.

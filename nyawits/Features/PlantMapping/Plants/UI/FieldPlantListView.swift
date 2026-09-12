@@ -12,7 +12,7 @@ struct FieldPlantListView: View {
                         ForEach(field.observations.filter { $0.rowID == row.id }) { observation in
                             Button { selected = observation } label: {
                                 HStack {
-                                    Circle().fill(NDREPalette.color(observation.ndre)).frame(width: 14, height: 14)
+                                    Circle().fill(VigorPalette.color(observation.ndre)).frame(width: 14, height: 14)
                                     Text("\(observation.side.title) · Tanaman \(observation.plantSequence)")
                                     Spacer()
                                     if let value = observation.ndre { Text(value, format: .number.precision(.fractionLength(2))).monospacedDigit() }
@@ -33,6 +33,6 @@ struct FieldPlantListView: View {
 
 #if DEBUG
 #Preview {
-    NavigationStack { FieldPlantListView(field: PreviewFixtures.demo) }.environmentObject(PreviewFixtures.store())
+    NavigationStack { FieldPlantListView(field: PreviewFixtures.demo) }.previewStores()
 }
 #endif

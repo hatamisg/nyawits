@@ -86,7 +86,7 @@ struct FieldActionPlantStrip: View {
                         .fill(.secondary.opacity(0.14))
                         .frame(width: 1, height: 10)
                     Circle()
-                        .fill(PlantHealthPalette.color(plant.ndre))
+                        .fill(VigorPalette.color(plant.ndre))
                         .overlay(Circle().strokeBorder(.white.opacity(0.7), lineWidth: 0.8))
                         .frame(width: 22, height: 22)
                     Rectangle()

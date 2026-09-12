@@ -84,7 +84,7 @@ struct FieldOverviewMap: View {
         }
         .overlay(alignment: .bottom) {
             if visibleObservations.contains(where: { $0.ndre != nil }) {
-                NDRELegend().foregroundStyle(.white.opacity(0.85)).padding(.horizontal, 18).padding(.bottom, 14).allowsHitTesting(false)
+                VigorLegend(caption: "Skala simulasi").foregroundStyle(.white.opacity(0.85)).padding(.horizontal, 18).padding(.bottom, 14).allowsHitTesting(false)
             } else {
                 Text(visibleObservations.isEmpty ? "Belum ada titik pada baris yang ditampilkan" : "Ketuk titik untuk melihat foto • posisi perkiraan")
                     .font(.caption2).foregroundStyle(.white).padding(.bottom, 14)

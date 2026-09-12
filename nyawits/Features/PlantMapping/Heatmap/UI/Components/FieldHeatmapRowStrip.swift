@@ -49,7 +49,7 @@ struct FieldHeatmapRowStrip: View {
 
     private var accessibilityValue: String {
         let measured = plants.filter { $0.ndre != nil }.count
-        return measured == 0 ? "Belum ada nilai NDRE" : "\(measured) tanaman memiliki nilai NDRE"
+        return measured == 0 ? "Belum ada nilai vigor" : "\(measured) tanaman memiliki nilai vigor"
     }
 }
 
@@ -63,7 +63,7 @@ private struct FieldHeatmapRowStripPlant: View {
                 .fill(.secondary.opacity(0.16))
                 .frame(width: 1, height: 10)
             Circle()
-                .fill(NDREPalette.color(plant.ndre))
+                .fill(VigorPalette.color(plant.ndre))
                 .overlay(Circle().strokeBorder(.white.opacity(0.72), lineWidth: 0.8))
                 .frame(width: diameter, height: diameter)
             Rectangle()

@@ -121,7 +121,7 @@ struct FieldPlantListViewInline: View {
                             Button { selected = observation } label: {
                                 HStack {
                                     Circle()
-                                        .fill(NDREPalette.color(observation.ndre))
+                                        .fill(VigorPalette.color(observation.ndre))
                                         .frame(width: 14, height: 14)
                                         .accessibilityHidden(true)
                                     Text("\(observation.side.title) · Tanaman \(observation.plantSequence)")
@@ -154,8 +154,8 @@ struct FieldPlantListViewInline: View {
 }
 
 #if DEBUG
-#Preview("Riwayat kosong") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.field) }.environmentObject(PreviewFixtures.store()) }
-#Preview("Riwayat tersimpan") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.fieldWithHistory) }.environmentObject(PreviewFixtures.store()) }
-#Preview("Detail versi") { NavigationStack { FieldMappingVersionDetailView(field: PreviewFixtures.field, archive: PreviewFixtures.archive) }.environmentObject(PreviewFixtures.store()) }
-#Preview("Daftar tanaman inline") { NavigationStack { FieldPlantListViewInline(field: PreviewFixtures.demo) }.environmentObject(PreviewFixtures.store()) }
+#Preview("Riwayat kosong") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.field) }.previewStores() }
+#Preview("Riwayat tersimpan") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.fieldWithHistory) }.previewStores() }
+#Preview("Detail versi") { NavigationStack { FieldMappingVersionDetailView(field: PreviewFixtures.field, archive: PreviewFixtures.archive) }.previewStores() }
+#Preview("Daftar tanaman inline") { NavigationStack { FieldPlantListViewInline(field: PreviewFixtures.demo) }.previewStores() }
 #endif
