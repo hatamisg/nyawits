@@ -66,3 +66,10 @@ struct FieldAreaPanel: View {
     
     }
 }
+
+#if DEBUG
+#Preview {
+    @Previewable @State var height: CGFloat = 0
+    FieldAreaPanel(viewModel: PreviewFixtures.areaModel(), panelHeight: $height, confirmBoundary: {}).padding().background(.green.gradient)
+}
+#endif

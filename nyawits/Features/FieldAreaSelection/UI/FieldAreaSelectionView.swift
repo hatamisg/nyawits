@@ -146,8 +146,11 @@ struct FieldAreaSelectionView: View {
     }
 }
 
-struct FieldAreaSelectionView_Previews: PreviewProvider {
-    static var previews: some View {
-        FieldAreaSelectionView()
-    }
+#if DEBUG
+#Preview("Batas terpilih") {
+    NavigationStack { FieldAreaSelectionView(initialBoundary: PreviewFixtures.boundary) }
 }
+#Preview("Batas kosong") {
+    NavigationStack { FieldAreaSelectionView() }
+}
+#endif

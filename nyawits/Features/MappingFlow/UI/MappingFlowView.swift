@@ -34,3 +34,9 @@ struct MappingFlowView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack { MappingFlowView(fieldID: PreviewFixtures.field.id, fieldName: "Kebun Baru") }.environmentObject(PreviewFixtures.store())
+}
+#endif

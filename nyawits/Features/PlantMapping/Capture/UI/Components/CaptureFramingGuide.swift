@@ -25,3 +25,9 @@ struct CaptureFramingGuide: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    CaptureFramingGuide(currentPlantSequence: 3).background(.black)
+}
+#endif

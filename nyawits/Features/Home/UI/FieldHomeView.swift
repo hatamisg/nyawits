@@ -62,12 +62,7 @@ struct FieldHomeView: View {
                         FertilizationFeature(fieldID: store.activeFieldID, isDemo: store.isDemoSelected)
                         FieldActionsFeature(fieldID: store.activeFieldID, isDemo: store.isDemoSelected)
                     }
-                    Text("Heatmap")
-                        .font(.title3.weight(.regular))
 
-                        .accessibilityAddTraits(.isHeader)
-                        .padding(.horizontal, 8)
-                        .padding(.top, 8)
                     if store.isDemoSelected {
                         FieldMappingCard(field: demo, onContinue: {})
                             .id(demo.id)
@@ -235,13 +230,12 @@ struct FieldHomeView: View {
 
 // MARK: - Previews
 
+#if DEBUG
 struct FieldHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = FieldMappingStore(
-            storageRoot: FileManager.default.temporaryDirectory
-                .appendingPathComponent("nyawits-preview-home-\(UUID().uuidString)", isDirectory: true)
-        )
+        let store = PreviewFixtures.store()
         FieldHomeView()
             .environmentObject(store)
     }
 }
+#endif

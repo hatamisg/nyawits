@@ -9,3 +9,7 @@ struct FertilizationFeature: View {
         FertilizationCard(content: isDemo ? FertilizationFixtures.demo : FertilizationFixtures.unavailable)
     }
 }
+
+#if DEBUG
+#Preview { FertilizationFeature(fieldID: nil, isDemo: true).padding() }
+#endif

@@ -12,6 +12,10 @@ struct ContentView: View {
 
     init() {
         #if DEBUG
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            _store = StateObject(wrappedValue: PreviewFixtures.store())
+            return
+        }
         let previewRoot = ProcessInfo.processInfo.arguments.contains("--mapping-camera-preview")
             ? FileManager.default.temporaryDirectory.appendingPathComponent("MappingCameraPreview") : nil
         _store = StateObject(wrappedValue: FieldMappingStore(storageRoot: previewRoot))

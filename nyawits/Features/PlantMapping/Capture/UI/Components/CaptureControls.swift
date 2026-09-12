@@ -91,3 +91,9 @@ struct CaptureControls<Thumbnail: View>: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    CaptureControls(viewModel: PreviewFixtures.captureModel(), store: PreviewFixtures.store(), lastPhotoThumbnail: Image(systemName: "leaf.fill").frame(width: 48, height: 48)).padding()
+}
+#endif
