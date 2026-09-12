@@ -3,8 +3,10 @@ import SwiftUI
 struct FieldMappingCard: View {
     let field: MappedField
     let onContinue: () -> Void
+    @EnvironmentObject private var scanStore: ScanSessionStore
     @State private var selected: PlantObservation?
     @State private var showsPlants = false
+    @State private var showsScanSessions = false
 
     private var summary: FieldProgressSummary {
         FieldListPresentation.progressSummary(for: field)
@@ -42,9 +44,18 @@ struct FieldMappingCard: View {
                         .frame(height: 54)
                         .background(Color.green, in: Capsule())
                 }
-                if field.isDemo != true && !field.observations.isEmpty {
-                    Button("Lihat foto & detail tanaman") { showsPlants = true }
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                // Satu tombol, dua tujuan: sesi pindai menumpang di sini supaya
+                // kartu tidak bertambah elemen. Muncul untuk semua kebun nyata,
+                // karena satu petak sesi bisa berdiri sendiri tanpa foto.
+                if field.isDemo != true {
+                    Menu {
+                        Button("Foto & detail tanaman") { showsPlants = true }
+                            .disabled(field.observations.isEmpty)
+                        Button("Sesi pindai") { showsScanSessions = true }
+                    } label: {
+                        Text("Lihat detail kebun")
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
                 }
             }
             .padding(18)
@@ -59,6 +70,12 @@ struct FieldMappingCard: View {
         .shadow(color: .black.opacity(0.06), radius: 14, y: 5)
         .sheet(item: $selected) { PlantObservationDetailView(observation: $0, field: field) }
         .sheet(isPresented: $showsPlants) { FieldPlantListView(field: field) }
+        .sheet(isPresented: $showsScanSessions) {
+            NavigationStack {
+                ScanSessionListView(fieldID: field.id, fieldName: field.name, showsCloseButton: true)
+            }
+            .environmentObject(scanStore)
+        }
     }
 
     private var header: some View {

@@ -4,8 +4,11 @@ import SwiftUI
 struct ScanSessionListView: View {
     let fieldID: UUID?
     let fieldName: String?
+    /// True saat layar ini muncul sebagai sheet, bukan didorong dari NavigationStack.
+    var showsCloseButton = false
 
     @EnvironmentObject private var scanStore: ScanSessionStore
+    @Environment(\.dismiss) private var dismiss
     @State private var openedSessionID: UUID?
     @State private var notice: String?
 
@@ -44,6 +47,11 @@ struct ScanSessionListView: View {
         .navigationTitle("Sesi Pindai")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            if showsCloseButton {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Tutup") { dismiss() }
+                }
+            }
             if let fieldID {
                 ToolbarItem(placement: .primaryAction) {
                     Button {

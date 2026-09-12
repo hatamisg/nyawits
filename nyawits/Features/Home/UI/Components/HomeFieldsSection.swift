@@ -6,8 +6,6 @@ struct HomeFieldsSection: View {
     let demo: MappedField
     @ObservedObject var store: FieldMappingStore
     @Binding var isShowingFieldList: Bool
-    @Binding var isShowingScanSessions: Bool
-    @Binding var isShowingSchedule: Bool
     let handleSelectField: (UUID) -> Void
     let handleSelectDemo: () -> Void
     let prepareNewField: () -> Void
@@ -40,12 +38,6 @@ struct HomeFieldsSection: View {
             HomeNavigationRow(title: "Tambah Kebun", symbol: "plus", action: prepareNewField)
             HomeNavigationRow(title: "Daftar Kebun", symbol: "map") {
                 isShowingFieldList = true
-            }
-            HomeNavigationRow(title: "Sesi Pindai", symbol: "viewfinder") {
-                isShowingScanSessions = true
-            }
-            HomeNavigationRow(title: "Jadwal Pemupukan", symbol: "calendar.badge.clock") {
-                isShowingSchedule = true
             }
         }
         .padding(.top, 10)
