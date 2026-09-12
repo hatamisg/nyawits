@@ -18,26 +18,26 @@ nonisolated enum InsightFallback {
     }
 
     static let checks: [String] = [
-        "Apakah medianya lebih kering daripada petak lain?",
-        "Apakah petak itu ternaungi sebagian hari?",
-        "Apakah tanamannya dipindah tanam belakangan?",
-        "Apakah ada gejala yang terlihat pada daunnya?"
+        "Apakah tanah di polibagnya lebih kering daripada petak lain?",
+        "Apakah petak itu kena bayangan sebagian hari?",
+        "Apakah tanamannya baru dipindah belakangan?",
+        "Apakah ada yang aneh pada daunnya, seperti bercak atau menguning?"
     ]
 
     static let recordReminder =
-        "Catat apa yang Anda temukan di catatan lapangan sesi ini — alat ini tidak bisa menyebut penyebabnya."
+        "Catat apa yang Anda lihat di catatan sesi ini. Alat ini tidak bisa menebak sebabnya."
 
     /// Tindakan untuk kartu Aksi.
     static func action(for snapshot: ScanInsightSnapshot) -> (message: String, note: String) {
         guard let first = snapshot.plots.first else {
             return (
                 message: "Belum ada rekomendasi tindakan",
-                note: "Tutup satu sesi pindai lebih dulu supaya petak bisa diurutkan."
+                note: "Tutup satu sesi pindai dulu, supaya petaknya bisa diurutkan."
             )
         }
         return (
             message: "Periksa \(first.title) lebih dulu saat berkeliling.",
-            note: "Petak itu paling tertinggal di sesi ini. Penyebabnya belum tentu pupuk — periksa dan catat sendiri."
+            note: "Petak itu paling tertinggal di sesi ini. Sebabnya belum tentu pupuk, jadi lihat sendiri dulu lalu catat."
         )
     }
 
