@@ -30,3 +30,9 @@ struct FieldPlantListView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack { FieldPlantListView(field: PreviewFixtures.demo) }.previewStores()
+}
+#endif

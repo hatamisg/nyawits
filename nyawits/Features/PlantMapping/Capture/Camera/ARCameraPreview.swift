@@ -18,3 +18,9 @@ struct ARCameraPreview: UIViewRepresentable {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    ARCameraPreview(session: ARSession()).overlay { Text("Canvas: kamera tidak dijalankan").foregroundStyle(.white) }.background(.black)
+}
+#endif

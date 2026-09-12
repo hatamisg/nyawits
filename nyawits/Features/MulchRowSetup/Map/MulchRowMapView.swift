@@ -255,3 +255,9 @@ private final class MulchDeviceLocationAnnotation: NSObject, MKAnnotation {
         self.coordinate = coordinate
     }
 }
+
+#if DEBUG
+#Preview {
+    MulchRowMapView(boundary: PreviewFixtures.boundary, rows: PreviewFixtures.field.plan.rows, rotationDegrees: 0, mapStyle: .satellite, userCoordinate: nil, userHorizontalAccuracy: nil, recenterRequest: nil, fitBoundaryRequestID: PreviewFixtures.field.id, bottomContentInset: 0, onRotationBegan: {}, onRotationChanged: { _ in }, onRotationEnded: {})
+}
+#endif

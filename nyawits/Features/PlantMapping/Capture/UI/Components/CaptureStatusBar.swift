@@ -33,3 +33,9 @@ struct CaptureStatusBar: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    CaptureStatusBar(viewModel: PreviewFixtures.captureModel(), trackingColor: .orange).padding().background(.black)
+}
+#endif

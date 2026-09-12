@@ -210,3 +210,12 @@ struct MulchRowControls: View {
         }
     }
 }
+
+#if DEBUG
+#Preview("Ringkasan batas") { FieldBoundarySummaryBar(boundary: PreviewFixtures.boundary).padding().background(.green.gradient) }
+#Preview("Kontrol baris") {
+    @Previewable @State var count = 10
+    @Previewable @State var rotation = 0.0
+    MulchRowControls(boundary: PreviewFixtures.boundary, rowCount: count, rotationDegrees: rotation, onRowCountChanged: { count = $0 }, onRotationChanged: { rotation = $0 }, onRotationEditingChanged: { _ in }).padding().background(.green.gradient)
+}
+#endif

@@ -68,3 +68,9 @@ struct PlantObservationDetailView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack { PlantObservationDetailView(observation: PreviewFixtures.demo.observations[0], field: PreviewFixtures.demo) }.previewStores()
+}
+#endif

@@ -50,3 +50,9 @@ struct HomeEmptyState: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    HomeEmptyState(store: PreviewFixtures.store(empty: true), prepareNewField: {}, handleSelectDemo: {}).padding()
+}
+#endif

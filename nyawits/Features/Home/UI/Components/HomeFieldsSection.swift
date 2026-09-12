@@ -45,3 +45,10 @@ struct HomeFieldsSection: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    @Previewable @State var showsList = false
+    HomeFieldsSection(realFields: [PreviewFixtures.field], demo: PreviewFixtures.demo, store: PreviewFixtures.store(), isShowingFieldList: $showsList, handleSelectField: { _ in }, handleSelectDemo: {}, prepareNewField: {}).padding()
+}
+#endif

@@ -27,3 +27,7 @@ struct FertilizationFeature: View {
         let isDemo: Bool
     }
 }
+
+#if DEBUG
+#Preview { FertilizationFeature(fieldID: nil, isDemo: true).padding() }
+#endif

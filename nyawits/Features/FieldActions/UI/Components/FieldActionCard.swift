@@ -2,31 +2,147 @@ import SwiftUI
 
 struct FieldActionCard: View {
     let content: FieldActionContent
-    private var isDemo: Bool { content.isSimulation }
+    var onAction: () -> Void = {}
+
     var body: some View {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Label("Aksi", systemImage: "rectangle.pattern.checkered")
-                        .font(.headline)
-                        .foregroundStyle(.blue)
-                    Spacer()
-                    if isDemo {
-                        Text("SIMULASI")
-                            .font(.caption.weight(.medium))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                Text(content.message)
-                    .font(.body)
-                    .lineSpacing(3)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(content.note)
-                    .font(.footnote)
+        Group {
+            if let focus = content.focus {
+                focusedCard(focus)
+            } else {
+                unavailableCard
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.background, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .strokeBorder(.primary.opacity(0.045), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.055), radius: 18, y: 8)
+        .accessibilityElement(children: .contain)
+    }
+
+    private func focusedCard(_ focus: FieldActionFocus) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            FieldActionCardHeader(isSimulation: content.isSimulation)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(focus.headline)
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.primary)
+                Text("Baris \(focus.rowNumber)  ·  \(focus.areaLabel)")
+                    .font(.body.weight(.medium))
                     .foregroundStyle(.secondary)
             }
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(uiColor: .secondarySystemGroupedBackground),
-                        in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+
+            FieldActionPlantStrip(plants: focus.plants)
+
+            Button(action: onAction) {
+                HStack(spacing: 14) {
+                    Image(systemName: focus.actionSystemImage)
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(.blue)
+                        .frame(width: 50, height: 50)
+                        .background(.blue.opacity(0.12), in: Circle())
+                    Text(focus.actionTitle)
+                        .font(.headline.weight(.semibold))
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 50, height: 50)
+                        .background(.primary.opacity(0.045), in: Circle())
+                }
+                .padding(.horizontal, 8)
+                .frame(minHeight: 78)
+                .background(.blue.opacity(0.085), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Membuka panduan tindakan")
+        }
+    }
+
+    private var unavailableCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            FieldActionCardHeader(isSimulation: false)
+            Text(content.message)
+                .font(.title3.weight(.bold))
+            Text(content.note)
+                .font(.body)
+                .foregroundStyle(.secondary)
+        }
     }
 }
+
+struct FieldActionPlantStrip: View {
+    let plants: [FieldActionPlant]
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(plants) { plant in
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .fill(.secondary.opacity(0.14))
+                        .frame(width: 1, height: 10)
+                    Circle()
+                        .fill(VigorPalette.color(plant.ndre))
+                        .overlay(Circle().strokeBorder(.white.opacity(0.7), lineWidth: 0.8))
+                        .frame(width: 22, height: 22)
+                    Rectangle()
+                        .fill(.secondary.opacity(0.14))
+                        .frame(width: 1, height: 10)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityHidden(true)
+            }
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 84)
+        
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Sebaran tanaman")
+        .accessibilityValue("\(plants.filter(\.needsAttention).count) dari \(plants.count) tanaman perlu diperiksa")
+    }
+}
+
+private struct FieldActionCardHeader: View {
+    let isSimulation: Bool
+
+    var body: some View {
+        HStack {
+            
+            Label("Aksi", systemImage: "rectangle.pattern.checkered")
+                .foregroundStyle(.blue)
+                .font(.title3.weight(.semibold))
+            Spacer()
+            if isSimulation {
+                Text("SIMULASI")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 16)
+                    .frame(height: 42)
+                    .background(.primary.opacity(0.045), in: Capsule())
+            }
+        }
+    }
+}
+
+#if DEBUG
+#Preview("Rekomendasi tindakan") {
+    FieldActionCard(content: FieldActionFixtures.demo)
+        .padding()
+        .background(Color(uiColor: .systemGroupedBackground))
+}
+
+#Preview("Belum ada rekomendasi") {
+    FieldActionCard(content: FieldActionFixtures.unavailable)
+        .padding()
+        .background(Color(uiColor: .systemGroupedBackground))
+}
+
+#Preview("Strip tanaman") {
+    FieldActionPlantStrip(plants: FieldActionFixtures.demo.focus!.plants)
+        .padding()
+}
+#endif

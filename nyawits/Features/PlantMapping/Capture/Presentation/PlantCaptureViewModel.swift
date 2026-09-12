@@ -104,6 +104,8 @@ final class PlantCaptureViewModel: NSObject, ObservableObject {
     }
 
     func start() async {
+        // Canvas renders controls without requesting camera, GPS, or motion access.
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
         guard !isCameraRunning else { return }
         wantsToRun = true
         startLocationUpdates()
@@ -165,6 +167,7 @@ final class PlantCaptureViewModel: NSObject, ObservableObject {
     }
 
     func capture(using store: FieldMappingStore) async {
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
         guard isCameraRunning, !isCapturing, let row = currentRow else { return }
         let rowNumber = selectedRowNumber, side = selectedSide, sequence = currentPlantSequence
         let captureID = captureSessionID

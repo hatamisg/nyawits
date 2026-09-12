@@ -114,3 +114,9 @@ struct MulchRowSetupView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack { MulchRowSetupView(boundary: PreviewFixtures.boundary, initialRowCount: 10) }
+}
+#endif

@@ -76,6 +76,10 @@ final class FieldInsightService: ObservableObject {
 
     /// Bentuk siap pakai untuk kartu Aksi: TIDAK PERNAH gagal.
     ///
+    /// `focus` selalu nil: keluaran model hanya teks, tidak memuat baris,
+    /// petak, atau sebaran tanaman, jadi ia tidak berhak mengisi bagian
+    /// kartu yang menyatakan posisi di kebun.
+    ///
     /// Kalau model tidak tersedia atau menolak, isinya jatuh ke teks berbasis
     /// aturan yang tetap tunduk pada batas klaim yang sama.
     func actionContent(for snapshot: ScanInsightSnapshot?) async -> FieldActionContent {
@@ -83,7 +87,8 @@ final class FieldInsightService: ObservableObject {
             return FieldActionContent(
                 isSimulation: false,
                 message: InsightFallback.noSession.message,
-                note: InsightFallback.noSession.note
+                note: InsightFallback.noSession.note,
+                focus: nil
             )
         }
         switch await fieldAction(for: snapshot) {
@@ -91,14 +96,16 @@ final class FieldInsightService: ObservableObject {
             return FieldActionContent(
                 isSimulation: false,
                 message: suggestion.message,
-                note: suggestion.note
+                note: suggestion.note,
+                focus: nil
             )
         case .failure:
             let fallback = InsightFallback.action(for: snapshot)
             return FieldActionContent(
                 isSimulation: false,
                 message: fallback.message,
-                note: fallback.note
+                note: fallback.note,
+                focus: nil
             )
         }
     }
