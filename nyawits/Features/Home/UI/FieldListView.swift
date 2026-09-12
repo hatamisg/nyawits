@@ -433,12 +433,9 @@ struct FieldListView: View {
 
 // MARK: - Previews
 
+#if DEBUG
 struct FieldListView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = FieldMappingStore(
-            storageRoot: FileManager.default.temporaryDirectory
-                .appendingPathComponent("nyawits-preview-list-\(UUID().uuidString)", isDirectory: true)
-        )
         NavigationStack {
             FieldListView(
                 onAddField: {},
@@ -446,6 +443,7 @@ struct FieldListView_Previews: PreviewProvider {
                 initialAction: nil
             )
         }
-        .environmentObject(store)
+        .previewStores()
     }
 }
+#endif

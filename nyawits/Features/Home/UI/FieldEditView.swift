@@ -247,3 +247,9 @@ struct FieldEditView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack { FieldEditView(field: PreviewFixtures.field, onSaved: { _, _ in }) }.previewStores()
+}
+#endif

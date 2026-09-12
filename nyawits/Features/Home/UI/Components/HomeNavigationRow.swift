@@ -29,3 +29,9 @@ struct HomeNavigationRow: View {
         .buttonStyle(.plain)
     }
 }
+
+#if DEBUG
+#Preview {
+    HomeNavigationRow(title: "Tambah Kebun", symbol: "plus", action: {}).padding()
+}
+#endif

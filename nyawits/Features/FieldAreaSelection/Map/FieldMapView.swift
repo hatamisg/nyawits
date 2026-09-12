@@ -389,3 +389,9 @@ private extension MKMapRect {
         self = rect
     }
 }
+
+#if DEBUG
+#Preview {
+    FieldMapView(points: PreviewFixtures.boundary.points, mapStyle: .satellite, userCoordinate: nil, recenterRequest: nil, fitRequest: MapFitRequest(points: PreviewFixtures.field.boundaryPoints), bottomContentInset: 0, onMapTap: { _ in }, onPointMoved: { _, _ in })
+}
+#endif

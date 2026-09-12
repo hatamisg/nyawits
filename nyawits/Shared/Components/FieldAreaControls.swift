@@ -236,3 +236,15 @@ private struct DarkGlassControlSurface: ViewModifier {
         }
     }
 }
+
+#if DEBUG
+#Preview("Kontrol peta dan glass") {
+    @Previewable @State var style = FieldMapStyle.satellite
+    VStack(spacing: 24) {
+        FloatingMapButton(action: {}) { Image(systemName: "chevron.left") }
+        FieldMapControlCluster(selection: $style, onHelp: {}, onLocate: {})
+        FieldMetricView(icon: "leaf", iconColor: .green, value: "385 m²", label: "Luas")
+        FieldActionButton(title: "Undo", icon: "arrow.uturn.backward", action: {})
+    }.padding().modifier(FieldSelectionPanelSurface()).padding().background(.green.gradient)
+}
+#endif

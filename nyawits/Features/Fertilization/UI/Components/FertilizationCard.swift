@@ -76,3 +76,8 @@ struct FertilizationCard: View {
     }
 
 }
+
+#if DEBUG
+#Preview("Simulasi") { FertilizationCard(content: FertilizationFixtures.demo).padding() }
+#Preview("Belum ada data") { FertilizationCard(content: FertilizationFixtures.unavailable).padding() }
+#endif

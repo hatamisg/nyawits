@@ -152,3 +152,10 @@ struct FieldPlantListViewInline: View {
         .padding(.horizontal, 16)
     }
 }
+
+#if DEBUG
+#Preview("Riwayat kosong") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.field) }.previewStores() }
+#Preview("Riwayat tersimpan") { NavigationStack { FieldMappingHistoryView(field: PreviewFixtures.fieldWithHistory) }.previewStores() }
+#Preview("Detail versi") { NavigationStack { FieldMappingVersionDetailView(field: PreviewFixtures.field, archive: PreviewFixtures.archive) }.previewStores() }
+#Preview("Daftar tanaman inline") { NavigationStack { FieldPlantListViewInline(field: PreviewFixtures.demo) }.previewStores() }
+#endif

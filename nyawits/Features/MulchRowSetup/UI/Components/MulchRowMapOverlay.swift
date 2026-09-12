@@ -40,3 +40,9 @@ struct MulchRowMapOverlay: View {
     
     }
 }
+
+#if DEBUG
+#Preview {
+    MulchRowMapOverlay(viewModel: PreviewFixtures.rowModel(), panelMapInset: 240, locateUser: {}, goBack: {}).background(.green.gradient)
+}
+#endif

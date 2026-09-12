@@ -45,3 +45,9 @@ struct FieldAreaMapOverlay: View {
     
     }
 }
+
+#if DEBUG
+#Preview {
+    FieldAreaMapOverlay(viewModel: PreviewFixtures.areaModel(), panelMapInset: 224, locateUser: {}, title: "Select Field Area", subtitle: "Tap to add boundary points", close: {}).background(.green.gradient)
+}
+#endif

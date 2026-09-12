@@ -18,6 +18,7 @@ final class FieldLocationService: NSObject, ObservableObject {
     }
 
     func requestLocation() {
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
         guard CLLocationManager.locationServicesEnabled() else {
             errorMessage = "Location Services are turned off on this device."
             isPermissionAlertPresented = true
@@ -41,6 +42,7 @@ final class FieldLocationService: NSObject, ObservableObject {
 
 extension FieldLocationService: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return }
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             manager.requestLocation()

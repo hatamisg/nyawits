@@ -26,3 +26,9 @@ struct HomeHeader: View {
     }
 
 }
+
+#if DEBUG
+#Preview {
+    HomeHeader(effectiveTitleText: "Krops", effectiveTitleFontSize: 40).padding()
+}
+#endif

@@ -154,3 +154,9 @@ struct FieldMappingCard: View {
         return "\(field.lowConfidenceCount) posisi masih berupa perkiraan GPS."
     }
 }
+
+#if DEBUG
+#Preview {
+    ScrollView { FieldMappingCard(field: PreviewFixtures.demo, onContinue: {}).padding() }.previewStores()
+}
+#endif

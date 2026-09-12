@@ -62,3 +62,10 @@ struct MulchRowPanel: View {
     
     }
 }
+
+#if DEBUG
+#Preview {
+    @Previewable @State var height: CGFloat = 0
+    MulchRowPanel(viewModel: PreviewFixtures.rowModel(), panelHeight: $height, confirmRows: {}).padding().background(.green.gradient)
+}
+#endif

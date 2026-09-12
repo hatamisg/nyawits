@@ -58,6 +58,30 @@ spektralnya -- IR-cut filter menempel permanen di tumpukan sensor.
 
 ## Checklist setelah perubahan
 
+### Komponen heatmap per baris
+
+- `Heatmap/UI/Components/FieldHeatmapRow.swift`: garis satu baris dan titik tanaman di kedua sisinya. Edit warna, ukuran titik, dan garis di sini. Preview tersedia di file yang sama.
+- `Heatmap/UI/Components/FieldHeatmapRowStrip.swift`: versi lurus untuk kartu ringkas. Ia menampilkan urutan `plantSequence` dari satu baris dan satu sisi, tanpa memakai atau mengubah rotasi/geometri kebun. Preview tersedia di file yang sama.
+- `Heatmap/UI/Components/FieldOverviewMap.swift`: menggabungkan baris, batas kebun, legenda, dan pemilihan titik.
+- `visibleRowNumbers` memfilter tampilan saja, bukan isi `MappedField`. Nomor mengacu ke `MappedRow.number`, bukan indeks array. Hubungan tanaman tetap memakai `rowID`.
+
+```swift
+// Semua baris (perilaku default yang sudah ada)
+FieldOverviewMap(field: field)
+
+// Hanya baris 3
+FieldOverviewMap(field: field, visibleRowNumbers: [3])
+
+// Beberapa baris
+FieldOverviewMap(field: field, visibleRowNumbers: [2, 5])
+```
+
+`nil` berarti semua baris, `[]` berarti tanpa baris. Nomor yang tidak ditemukan tidak menghasilkan titik. Batas dan skala kebun tetap sama agar koordinat tidak bergeser saat filter berubah. Jumlah titik, tap, dan VoiceOver mengikuti baris yang terlihat; statistik kebun di luar peta tetap mencakup seluruh kebun. Filter belum ditambahkan sebagai kontrol baru di homescreen.
+
+Untuk kartu ringkas (misalnya Aksi), pilih baris dan sisi dari logika rekomendasi lalu gunakan `FieldHeatmapRowStrip`. Komponen ini hanya menerima dan mengurutkan observasi yang sudah tersimpan; ia tidak melakukan konversi koordinat atau pembaruan model.
+
+### Verifikasi
+
 1. Build scheme nyawits.
 2. Buka demo; tap titik; buka daftar/detail tanaman.
 3. Pada iPhone, mulai/lanjutkan foto, ganti baris/sisi, undo/lewati, simpan.

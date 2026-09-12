@@ -8,3 +8,7 @@ struct FieldActionsFeature: View {
         FieldActionCard(content: isDemo ? FieldActionFixtures.demo : FieldActionFixtures.unavailable)
     }
 }
+
+#if DEBUG
+#Preview { FieldActionsFeature(fieldID: nil, isDemo: true).padding() }
+#endif

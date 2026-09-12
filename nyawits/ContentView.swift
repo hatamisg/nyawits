@@ -14,6 +14,13 @@ struct ContentView: View {
 
     init() {
         #if DEBUG
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            // Canvas memakai fixture in-memory agar tidak menyentuh data perangkat.
+            _store = StateObject(wrappedValue: PreviewFixtures.store())
+            _scanStore = StateObject(wrappedValue: PreviewFixtures.scanStore())
+            _scheduleStore = StateObject(wrappedValue: PreviewFixtures.scheduleStore())
+            return
+        }
         let previewRoot = ProcessInfo.processInfo.arguments.contains("--mapping-camera-preview")
             ? FileManager.default.temporaryDirectory.appendingPathComponent("MappingCameraPreview") : nil
         _store = StateObject(wrappedValue: FieldMappingStore(storageRoot: previewRoot))
