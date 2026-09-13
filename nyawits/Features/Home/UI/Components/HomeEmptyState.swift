@@ -5,14 +5,15 @@ struct HomeEmptyState: View {
     @ObservedObject var store: FieldMappingStore
     let prepareNewField: () -> Void
     let handleSelectDemo: () -> Void
+    @ScaledMetric(relativeTo: .largeTitle) private var glyphCircle: CGFloat = 92
     var body: some View {
         VStack(spacing: 18) {
             ZStack {
                 Circle()
                     .fill(Color.green.opacity(0.12))
-                    .frame(width: 92, height: 92)
+                    .frame(width: glyphCircle, height: glyphCircle)
                 Image(systemName: "map.fill")
-                    .font(.system(size: 38, weight: .medium))
+                    .font(.largeTitle.weight(.medium))
                     .foregroundStyle(.green)
             }
 

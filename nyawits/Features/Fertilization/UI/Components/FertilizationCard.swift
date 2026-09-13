@@ -7,15 +7,21 @@ struct FertilizationCard: View {
     var body: some View {
         VStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 22) {
-                    HStack {
-                        Label("Pemupukan", systemImage: "calendar.badge.clock")
-                            .foregroundStyle(.orange)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.tertiary)
+                    // Di ukuran teks aksesibilitas, ikon dan chevron merebut lebar
+                    // sampai judulnya terpenggal ("Pemupu / kan"). ViewThatFits
+                    // menjatuhkan chevron yang memang hanya hiasan -- seluruh kartu
+                    // tetap bisa diketuk, dan petunjuknya ada di accessibilityHint.
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            cardTitle
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.tertiary)
+                        }
+                        cardTitle
                     }
-                    .font(.headline)
+                    .font(.cardLabel)
 
                     if content.hasSchedule {
                         ViewThatFits(in: .horizontal) {
@@ -26,14 +32,14 @@ struct FertilizationCard: View {
                             .scrollIndicators(.hidden)
                         }
                         Text(content.caption)
-                            .font(.footnote)
+                            .font(.cardCaption)
                             .foregroundStyle(.secondary)
                     } else {
                         Text(content.headline)
-                            .font(.body)
+                            .font(.cardMessage)
                             .foregroundStyle(.primary)
                         Text(content.detail)
-                            .font(.footnote)
+                            .font(.cardCaption)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -44,6 +50,12 @@ struct FertilizationCard: View {
             .contentShape(RoundedRectangle(cornerRadius: 28))
         }
         .accessibilityHint("Buka jadwal pemupukan")
+    }
+
+    private var cardTitle: some View {
+        Label("Pemupukan", systemImage: "calendar.badge.clock")
+            .foregroundStyle(.orange)
+            .labelStyle(.cardTitle)
     }
 
     private var scheduleDates: some View {

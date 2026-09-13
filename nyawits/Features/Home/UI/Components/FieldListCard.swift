@@ -60,15 +60,17 @@ struct FieldListCard: View {
                     if isActive { activeBadge }
                 }
 
+                // Dua baris, bukan satu: pada ukuran teks aksesibilitas satu baris
+                // memotong angka luas dan jumlah baris yang justru inti kartunya.
                 Text(FieldListPresentation.metadataText(for: field))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    .lineLimit(2)
 
                 Text(FieldListPresentation.compactStatusText(for: field))
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    .lineLimit(2)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             // Separator baris mulai sejajar kolom teks, bukan di bawah ikon peta.

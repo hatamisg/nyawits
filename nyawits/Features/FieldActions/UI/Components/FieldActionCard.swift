@@ -3,6 +3,8 @@ import SwiftUI
 struct FieldActionCard: View {
     let content: FieldActionContent
     var onAction: () -> Void = {}
+    @ScaledMetric(relativeTo: .headline) private var actionGlyph: CGFloat = 50
+    @ScaledMetric(relativeTo: .headline) private var actionRowHeight: CGFloat = 78
 
     var body: some View {
         Group {
@@ -29,10 +31,10 @@ struct FieldActionCard: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(focus.headline)
-                    .font(.title3.weight(.bold))
+                    .font(.cardMessage)
                     .foregroundStyle(.primary)
                 Text("Baris \(focus.rowNumber)  ·  \(focus.areaLabel)")
-                    .font(.body.weight(.medium))
+                    .font(.cardSecondary)
                     .foregroundStyle(.secondary)
             }
 
@@ -43,7 +45,7 @@ struct FieldActionCard: View {
                     Image(systemName: focus.actionSystemImage)
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(.blue)
-                        .frame(width: 50, height: 50)
+                        .frame(width: actionGlyph, height: actionGlyph)
                         .background(.blue.opacity(0.12), in: Circle())
                     Text(focus.actionTitle)
                         .font(.headline.weight(.semibold))
@@ -51,11 +53,11 @@ struct FieldActionCard: View {
                     Image(systemName: "chevron.right")
                         .font(.title3.weight(.bold))
                         .foregroundStyle(.secondary)
-                        .frame(width: 50, height: 50)
+                        .frame(width: actionGlyph, height: actionGlyph)
                         .background(.primary.opacity(0.045), in: Circle())
                 }
                 .padding(.horizontal, 8)
-                .frame(minHeight: 78)
+                .frame(minHeight: actionRowHeight)
                 .background(.blue.opacity(0.085), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
             }
             .buttonStyle(.plain)
@@ -67,9 +69,9 @@ struct FieldActionCard: View {
         VStack(alignment: .leading, spacing: 14) {
             FieldActionCardHeader(isSimulation: false)
             Text(content.message)
-                .font(.title3.weight(.bold))
+                .font(.cardMessage)
             Text(content.note)
-                .font(.body)
+                .font(.cardCaption)
                 .foregroundStyle(.secondary)
         }
     }
@@ -108,21 +110,39 @@ struct FieldActionPlantStrip: View {
 
 private struct FieldActionCardHeader: View {
     let isSimulation: Bool
+    @ScaledMetric(relativeTo: .caption) private var badgeHeight: CGFloat = 42
+
+    private var title: some View {
+        Label("Aksi", systemImage: "rectangle.pattern.checkered")
+            .foregroundStyle(.blue)
+            .labelStyle(.cardTitle)
+            .font(.cardLabel)
+    }
+
+    @ViewBuilder
+    private var badge: some View {
+        if isSimulation {
+            Text("SIMULASI")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 16)
+                .frame(height: badgeHeight)
+                .background(.primary.opacity(0.045), in: Capsule())
+        }
+    }
 
     var body: some View {
-        HStack {
-            
-            Label("Aksi", systemImage: "rectangle.pattern.checkered")
-                .foregroundStyle(.blue)
-                .font(.title3.weight(.semibold))
-            Spacer()
-            if isSimulation {
-                Text("SIMULASI")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 16)
-                    .frame(height: 42)
-                    .background(.primary.opacity(0.045), in: Capsule())
+        // Sama seperti kartu Pemupukan: mendatar selama muat, menurun saat
+        // ukuran teks aksesibilitas membuat judul dan lencana berebut lebar.
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                title
+                Spacer()
+                badge
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                title
+                badge
             }
         }
     }

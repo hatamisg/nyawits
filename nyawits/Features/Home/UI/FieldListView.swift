@@ -382,7 +382,7 @@ struct FieldListView: View {
                     .fill(Color.green.opacity(0.12))
                     .frame(width: 80, height: 80)
                 Image(systemName: "map.fill")
-                    .font(.system(size: 32, weight: .medium))
+                    .font(.largeTitle.weight(.medium))
                     .foregroundStyle(.green)
             }
 
@@ -413,7 +413,7 @@ struct FieldListView: View {
     private var emptySearchResultState: some View {
         VStack(spacing: 14) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 40))
+                .font(.largeTitle)
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 6) {
