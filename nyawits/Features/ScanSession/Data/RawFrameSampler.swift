@@ -48,73 +48,6 @@ final class RawFrameSampler {
         }
     }
 
-    /// Rerata DN satu kotak, per kanal linear.
-    /// Mengembalikan (r, g, b) dalam ruang linear.
-    ///
-    /// Sengaja tidak `private`: pembalikan sumbu Y di bawah adalah tempat paling
-    /// mudah tertukarnya ROI kanopi dan ROI kartu tanpa gejala yang terlihat,
-    /// jadi ia diuji langsung.
-    func averageChannels(of image: CIImage, roi: ROIRect) throws -> (Double, Double, Double) {
-        guard roi.isValid else { throw SamplerError.invalidROI }
-        let extent = image.extent
-        guard extent.width > 0, extent.height > 0 else { throw SamplerError.invalidROI }
-
-        // ROI memakai origin kiri-ATAS (konvensi UI); CIImage memakai kiri-BAWAH.
-        let width = roi.width * extent.width
-        let height = roi.height * extent.height
-        let x = extent.origin.x + roi.x * extent.width
-        let y = extent.origin.y + (1.0 - roi.y - roi.height) * extent.height
-        let rect = CGRect(x: x, y: y, width: width, height: height)
-        guard rect.width >= 1, rect.height >= 1 else { throw SamplerError.invalidROI }
-
-        let averaged = image.applyingFilter("CIAreaAverage", parameters: [
-            kCIInputExtentKey: CIVector(cgRect: rect)
-        ])
-
-        var pixel = [Float](repeating: 0, count: 4)
-        context.render(
-            averaged,
-            toBitmap: &pixel,
-            rowBytes: MemoryLayout<Float>.size * 4,
-            bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-            format: .RGBAf,
-            colorSpace: linearColorSpace
-        )
-        guard pixel.allSatisfy({ $0.isFinite }) else { throw SamplerError.renderFailed }
-        return (Double(pixel[0]), Double(pixel[1]), Double(pixel[2]))
-    }
-
-    /// Dekode RAW dengan pengolahan dimatikan sejauh yang bisa dimatikan.
-    private func linearImage(at url: URL) throws -> CIImage {
-        guard let filter = CIRAWFilter(imageURL: url) else {
-            throw SamplerError.cannotDecodeRAW
-        }
-        filter.isGamutMappingEnabled = false
-        filter.isDraftModeEnabled = false
-        filter.exposure = 0
-        filter.baselineExposure = 0
-        filter.shadowBias = 0
-        filter.boostAmount = 0
-        filter.boostShadowAmount = 0
-        filter.extendedDynamicRangeAmount = 0
-        // Beberapa knob hanya ada kalau dekoder mendukungnya untuk sensor ini.
-        if filter.isContrastSupported { filter.contrastAmount = 0 }
-        if filter.isDetailSupported { filter.detailAmount = 0 }
-        if filter.isSharpnessSupported { filter.sharpnessAmount = 0 }
-        if filter.isLuminanceNoiseReductionSupported { filter.luminanceNoiseReductionAmount = 0 }
-        if filter.isColorNoiseReductionSupported { filter.colorNoiseReductionAmount = 0 }
-        if filter.isMoireReductionSupported { filter.moireReductionAmount = 0 }
-        if filter.isLocalToneMapSupported { filter.localToneMapAmount = 0 }
-        if filter.isLensCorrectionSupported { filter.isLensCorrectionEnabled = false }
-        // Titik netral dipatok: penguatan per kanal harus sama di semua frame.
-        // Inilah yang membuat perbandingan antar kanal tetap sah — dan kenapa
-        // frame non-RAW (yang sudah kena auto white balance) ditolak lebih dulu.
-        filter.neutralChromaticity = Self.neutralChromaticity
-
-        guard let image = filter.outputImage else { throw SamplerError.cannotDecodeRAW }
-        return image
-    }
-
     /// Gambar untuk DITAMPILKAN saja — jangan sekali pun dipakai mengukur.
     ///
     /// Draft mode dan penyekalaan dipakai supaya pratinjau cepat, dan hasilnya
@@ -147,26 +80,35 @@ final class RawFrameSampler {
         canopy: ROIRect,
         card: ROIRect
     ) throws -> [BandReading] {
-        let image = try linearImage(at: frameURL)
-        let canopyChannels = try averageChannels(of: image, roi: canopy)
-        let cardChannels = try averageChannels(of: image, roi: card)
+        // Dibaca dari bidang CFA langsung, BUKAN lewat CIRAWFilter: dekode RAW
+        // Apple menerapkan white balance dan ColorMatrix yang mencampur antar
+        // kanal, dan pencampuran itu tidak saling meniadakan saat kanopi dibagi
+        // kartu. Terukur galat 7-25 % pada kanal RGB; jalur ini di bawah 0,01 %.
+        let image = try DNGRawReader.read(contentsOf: frameURL)
+        guard let canopyColors = image.meanByCFAColor(in: canopy),
+              let cardColors = image.meanByCFAColor(in: card),
+              let canopyAll = image.meanAllPhotosites(in: canopy),
+              let cardAll = image.meanAllPhotosites(in: card) else {
+            throw SamplerError.invalidROI
+        }
 
         return frame.role.bands.map { label in
             let canopyDN: Double
             let cardDN: Double
             switch label {
             case .lp720, .lp850:
-                canopyDN = (canopyChannels.0 + canopyChannels.1 + canopyChannels.2) / 3
-                cardDN = (cardChannels.0 + cardChannels.1 + cardChannels.2) / 3
+                // Di balik filter IR-pass ketiga sumur Bayer melihat band yang sama.
+                canopyDN = canopyAll
+                cardDN = cardAll
             case .red:
-                canopyDN = canopyChannels.0
-                cardDN = cardChannels.0
+                canopyDN = canopyColors.red
+                cardDN = cardColors.red
             case .green:
-                canopyDN = canopyChannels.1
-                cardDN = cardChannels.1
+                canopyDN = canopyColors.green
+                cardDN = cardColors.green
             case .blue:
-                canopyDN = canopyChannels.2
-                cardDN = cardChannels.2
+                canopyDN = canopyColors.blue
+                cardDN = cardColors.blue
             }
             return BandReading(
                 label: label,
