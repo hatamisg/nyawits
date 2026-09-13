@@ -31,10 +31,10 @@ struct FieldActionCard: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(focus.headline)
-                    .font(.title3.weight(.bold))
+                    .font(.cardMessage)
                     .foregroundStyle(.primary)
                 Text("Baris \(focus.rowNumber)  ·  \(focus.areaLabel)")
-                    .font(.body.weight(.medium))
+                    .font(.cardSecondary)
                     .foregroundStyle(.secondary)
             }
 
@@ -69,9 +69,9 @@ struct FieldActionCard: View {
         VStack(alignment: .leading, spacing: 14) {
             FieldActionCardHeader(isSimulation: false)
             Text(content.message)
-                .font(.title3.weight(.bold))
+                .font(.cardMessage)
             Text(content.note)
-                .font(.body)
+                .font(.cardCaption)
                 .foregroundStyle(.secondary)
         }
     }
@@ -116,9 +116,7 @@ private struct FieldActionCardHeader: View {
         Label("Aksi", systemImage: "rectangle.pattern.checkered")
             .foregroundStyle(.blue)
             .labelStyle(.cardTitle)
-            // Setingkat dengan label kartu "Pemupukan", dan sengaja SATU tingkat
-            // di bawah headline isi kartu agar hierarkinya jelas.
-            .font(.headline)
+            .font(.cardLabel)
     }
 
     @ViewBuilder

@@ -21,7 +21,7 @@ struct FertilizationCard: View {
                         }
                         cardTitle
                     }
-                    .font(.headline)
+                    .font(.cardLabel)
 
                     if content.hasSchedule {
                         ViewThatFits(in: .horizontal) {
@@ -32,14 +32,14 @@ struct FertilizationCard: View {
                             .scrollIndicators(.hidden)
                         }
                         Text(content.caption)
-                            .font(.footnote)
+                            .font(.cardCaption)
                             .foregroundStyle(.secondary)
                     } else {
                         Text(content.headline)
-                            .font(.body)
+                            .font(.cardMessage)
                             .foregroundStyle(.primary)
                         Text(content.detail)
-                            .font(.footnote)
+                            .font(.cardCaption)
                             .foregroundStyle(.secondary)
                     }
                 }
