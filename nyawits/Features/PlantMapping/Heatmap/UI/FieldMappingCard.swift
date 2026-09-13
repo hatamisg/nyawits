@@ -7,6 +7,9 @@ struct FieldMappingCard: View {
     @State private var selected: PlantObservation?
     @State private var showsPlants = false
     @State private var showsScanSessions = false
+    @ScaledMetric(relativeTo: .headline) private var primaryButtonHeight: CGFloat = 54
+    @ScaledMetric(relativeTo: .caption2) private var statusBadgeHeight: CGFloat = 28
+    @ScaledMetric(relativeTo: .headline) private var metricDividerHeight: CGFloat = 38
 
     private var summary: FieldProgressSummary {
         FieldListPresentation.progressSummary(for: field)
@@ -41,7 +44,7 @@ struct FieldMappingCard: View {
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 54)
+                        .frame(height: primaryButtonHeight)
                         .background(Color.green, in: Capsule())
                 }
                 // Satu tombol, dua tujuan: sesi pindai menumpang di sini supaya
@@ -94,7 +97,7 @@ struct FieldMappingCard: View {
                 .font(.caption2.weight(.bold))
                 .foregroundStyle(.green)
                 .padding(.horizontal, 10)
-                .frame(height: 28)
+                .frame(height: statusBadgeHeight)
                 .background(Color.green.opacity(0.12), in: Capsule())
         }
     }
@@ -102,9 +105,9 @@ struct FieldMappingCard: View {
     private var metrics: some View {
         HStack(spacing: 0) {
             metric(value: FieldMeasurementFormatter.area(field.areaSquareMeters), label: "Luas")
-            Divider().frame(height: 38)
+            Divider().frame(height: metricDividerHeight)
             metric(value: "\(field.rows.count)", label: "Baris")
-            Divider().frame(height: 38)
+            Divider().frame(height: metricDividerHeight)
             if field.isDemo == true {
                 metric(value: String(format: "%.2f", field.previewVigorValues.reduce(0, +) / Double(max(1, field.previewVigorValues.count))), label: "Rata-rata simulasi")
             } else {

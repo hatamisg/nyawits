@@ -4,6 +4,9 @@ import UIKit
 struct HomeHeader: View {
     let effectiveTitleText: String
     let effectiveTitleFontSize: CGFloat
+    /// Logo ikut tumbuh bersama ukuran teks; kalau dipatok, ia menyusut relatif
+    /// terhadap judul di ukuran aksesibilitas dan tata letaknya jadi timpang.
+    @ScaledMetric(relativeTo: .largeTitle) private var logoSize: CGFloat = 56
     var body: some View {
         HStack {
             Text(effectiveTitleText)
@@ -15,7 +18,7 @@ struct HomeHeader: View {
                 .resizable()
                 .scaledToFit()
                 .padding(10)
-                .frame(width: 56, height: 56)
+                .frame(width: logoSize, height: logoSize)
                 .background(.white.opacity(0.9), in: Circle())
                 .accessibilityLabel("Logo modul")
         }
